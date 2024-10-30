@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
-class PasswordLoginScreen extends StatelessWidget {
+class PasswordLoginScreen extends StatefulWidget {
   final String userEmail;
 
   PasswordLoginScreen({required this.userEmail});
+
+  @override
+  _PasswordLoginScreenState createState() => _PasswordLoginScreenState();
+}
+
+class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
+  final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true; // Controla la visibilidad de la contraseña
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +46,7 @@ class PasswordLoginScreen extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   Text(
-                    'usuario', // Nombre del usuario
+                    'usuario',
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -46,24 +54,46 @@ class PasswordLoginScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextField(
-              obscureText: true,
+              controller: passwordController,
+              obscureText: _obscureText,
               decoration: InputDecoration(
                 labelText: 'Contraseña',
                 border: UnderlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText; // Cambia la visibilidad
+                    });
+                  },
+                ),
               ),
             ),
-            SizedBox(height: 40),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange[300],
-                padding: EdgeInsets.symmetric(vertical: 15),
+            SizedBox(height: 40), // Espacio antes del botón
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 120, // Ancho del botón
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange[300],
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  onPressed: () {
+                    // Lógica para continuar con la autenticación
+                  },
+                  child: Text('Continuar'),
+                ),
               ),
-              onPressed: () {},
-              child: Text('Continuar'),
             ),
             SizedBox(height: 20),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                // Acción para crear cuenta
+              },
               child: Text(
                 'Crear cuenta',
                 style: TextStyle(color: Colors.red),
