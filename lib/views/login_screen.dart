@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/views/emailLogin_screen.dart';
+import 'email_login_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -12,8 +12,11 @@ class LoginScreen extends StatelessWidget {
             TextButton(
               onPressed: () {},
               child: Text(
-                'Continuar como visitante',
-                style: TextStyle(color: Colors.red),
+                'Continuar como visitante ',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18,
+                ),
               ),
             ),
             SizedBox(height: 40),
@@ -28,6 +31,7 @@ class LoginScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
               onPressed: () {
+                // Navegar a la pantalla de ingreso de correo
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EmailLoginScreen()),
