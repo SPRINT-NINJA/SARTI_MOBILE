@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'password_login_screen.dart';
+import 'package:sarti_mobile/utils/colors.dart';
 
 class EmailLoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -36,7 +37,9 @@ class EmailLoginScreen extends StatelessWidget {
                 width: 120,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[300],
+                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primaryColor,
+                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   onPressed: () {

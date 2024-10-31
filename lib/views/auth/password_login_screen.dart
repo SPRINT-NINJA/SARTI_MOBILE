@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/views/auth/recovery_password_view.dart';
+import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   final String userEmail;
@@ -79,7 +82,9 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                 width: 120, // Ancho del botón
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[300],
+                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primaryColor,
+                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   onPressed: () {
@@ -96,6 +101,18 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               },
               child: Text(
                 'Crear cuenta',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ValidateEmailView()),
+                );
+              },
+              child: Text(
+                '¿Olvidaste tu contraseña?',
                 style: TextStyle(color: Colors.red),
               ),
             ),

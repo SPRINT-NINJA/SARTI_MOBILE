@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'email_login_screen.dart';
+import 'package:sarti_mobile/utils/colors.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class LoginScreen extends StatelessWidget {
               child: Text(
                 'Continuar como visitante ',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: AppColors.sencudaryColor,
                   fontSize: 18,
                 ),
               ),
@@ -27,7 +28,9 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange[300],
+                foregroundColor: Colors.white,
+                backgroundColor: AppColors.primaryColor,
+                textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
               onPressed: () {

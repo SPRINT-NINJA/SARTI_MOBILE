@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sarti_mobile/utils/colors.dart';
 
 class RecoveryPasswordView extends StatelessWidget {
   @override
@@ -35,13 +36,22 @@ class RecoveryPasswordView extends StatelessWidget {
               obscureText: true, // Oculta la contraseña
             ),
             SizedBox(height: 40.0),
-            ElevatedButton(
-              onPressed: () {
-                // Lógica para cambiar la contraseña
-              },
-              child: Text('Cambiar contraseña'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange, // Color del botón
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Lógica para cambiar la contraseña
+                  },
+                  child: Text('Cambiar contraseña'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primaryColor,
+                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  ),
+                ),
               ),
             ),
           ],
