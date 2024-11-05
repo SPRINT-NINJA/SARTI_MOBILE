@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'email_login_screen.dart';
 import 'package:sarti_mobile/utils/colors.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -11,7 +12,13 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navegar a la pantalla de inicio como visitante
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
               child: Text(
                 'Continuar como visitante ',
                 style: TextStyle(
