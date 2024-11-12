@@ -5,8 +5,7 @@ class ShoppingCartScreen extends StatelessWidget {
   final List<CartItem> items = [
     CartItem(
       name: 'Pulsera de correa de amistad sobre Bob y Patricio Estrella',
-      imageUrl:
-          'https://via.placeholder.com/150', // URL temporal para la imagen
+      imageUrl: 'https://via.placeholder.com/150',
       price: 300.0,
       quantity: 1,
       isAvailable: true,
@@ -90,9 +89,7 @@ class ShoppingCartScreen extends StatelessWidget {
                         ),
                         IconButton(
                           icon: Icon(Icons.remove_circle, color: Colors.red),
-                          onPressed: () {
-                            // Lógica para remover el item
-                          },
+                          onPressed: () {},
                         ),
                       ],
                     ),
@@ -120,9 +117,7 @@ class ShoppingCartScreen extends StatelessWidget {
                 backgroundColor: AppColors.primaryColor,
                 minimumSize: Size(double.infinity, 50),
               ),
-              onPressed: () {
-                // Acción para continuar compra
-              },
+              onPressed: () {},
               child: Text('Continuar Compra', style: TextStyle(fontSize: 18)),
             ),
           ),
