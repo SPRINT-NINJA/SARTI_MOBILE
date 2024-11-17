@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/views/auth/login_screen.dart';
-import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
-import 'package:sarti_mobile/views/auth/product_list_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:sarti_mobile/test/config/theme/app_theme.dart';
+import 'package:sarti_mobile/test/presentation/screens/chat/chat_screen.dart';
+import 'package:sarti_mobile/test/providers/chat_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +13,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-      ),
-      home: ProductListScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ],
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Yes or no',
+          theme: AppTheme(selectedColor: 5).theme(),
+          home: const ChatScreen()),
     );
   }
 }
