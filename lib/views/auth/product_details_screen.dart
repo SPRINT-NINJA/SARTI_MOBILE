@@ -15,9 +15,9 @@ class ProductDetailScreen extends StatelessWidget {
     required this.price,
     required this.description,
     this.additionalImages = const [
-      'assets/logo/ICON-SARTI.png', // Primera imagen adicional
-      'assets/logo/ICON-SARTI.png', // Segunda imagen adicional
-      'assets/logo/ICON-SARTI.png', // Tercera imagen adicional
+      'assets/logo/ICON_SARTI.png', // Primera imagen adicional
+      'assets/logo/ICON_SARTI.png', // Segunda imagen adicional
+      'assets/logo/ICON_SARTI.png', // Tercera imagen adicional
     ],
   }) : super(key: key);
 

@@ -44,7 +44,7 @@ class DeliveryOrderDetail extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/logo/ICON-SARTI.png',
+                          'assets/logo/ICON_SARTI.png',
                           height: 100,
                           alignment: Alignment.center,
                         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/utils/colors.dart';
-import 'package:sarti_mobile/views/auth/recovery_password_view.dart';
 import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {

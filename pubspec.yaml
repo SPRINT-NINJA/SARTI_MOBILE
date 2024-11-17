@@ -65,10 +65,12 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/logo/ICON-SARTI.png
+    - assets/logo/ICON_SARTI.png
     - assets/delivery/peding_delivery.png
     - assets/delivery/awaiting_delivery.png
     - assets/delivery/successful_delivery.png
+    - assets/images/logo_sarti_leading.png
+    - assets/images/logo_sarti_leading_fill.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

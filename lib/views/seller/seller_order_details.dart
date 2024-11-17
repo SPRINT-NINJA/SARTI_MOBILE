@@ -37,7 +37,7 @@ class PurchaseDetailScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/logo/ICON-SARTI.png',
+                      'assets/logo/ICON_SARTI.png',
                       height: 150,
                       width: 150,
                       fit: BoxFit.cover,

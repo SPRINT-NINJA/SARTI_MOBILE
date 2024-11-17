@@ -33,7 +33,7 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
-            'assets/logo/ICON-SARTI.png',
+            'assets/logo/ICON_SARTI.png',
             width: 24,
             height: 24,
           ),
@@ -88,7 +88,7 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                     children: [
                       Row(
                         children: [
-                          Image.asset('assets/logo/ICON-SARTI.png', height: 100),
+                          Image.asset('assets/logo/ICON_SARTI.png', height: 100),
                           SizedBox(width: 16),
                           Expanded(
                             child: Column(
