@@ -33,6 +33,12 @@ class AppTheme {
 
   ThemeData theme() {
     return ThemeData(
+      inputDecorationTheme: const InputDecorationTheme(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: _primaryColor, width: 2,),
+        ),
+        labelStyle: TextStyle(color: Colors.black),
+      ),
       useMaterial3: true,
       primarySwatch: createMaterialColor(_colorsTheme[selectedColor]),
       primaryColor: _colorsTheme[selectedColor],

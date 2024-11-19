@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/src/auth/create_account/widgets/button_fill.dart';
+import 'package:sarti_mobile/src/auth/create_account/widgets/button_fill_icon.dart';
 
 class CreateAccountView extends StatelessWidget {
   const CreateAccountView({super.key});
@@ -99,17 +99,17 @@ class _CreateAccountButton extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           const SizedBox(height: 34),
-                          ButtonFill(theme: theme, textButton: 'Repartidor', onPressed: () {
+                          ButtonFillIcon(theme: theme, textButton: 'Repartidor', onPressed: () {
                             Navigator.pushNamed(context, '/create-account/delivery');
-                          }),
+                          }, icon: Icons.delivery_dining),
                           const SizedBox(height: 34),
-                          ButtonFill(theme: theme, textButton: 'Emprendedor', onPressed: () {
+                          ButtonFillIcon(theme: theme, textButton: 'Emprendedor', onPressed: () {
                             Navigator.pushNamed(context, '/create-account/entrepreneur');
-                          }),
+                          }, icon: Icons.business_center),
                           const SizedBox(height: 34),
-                          ButtonFill(theme: theme, textButton: 'Cliente', onPressed: () {
+                          ButtonFillIcon(theme: theme, textButton: 'Cliente', onPressed: () {
                             Navigator.pushNamed(context, '/create-account/client');
-                          }),
+                          }, icon: Icons.person),
                         ],
                       ),
                     ],
