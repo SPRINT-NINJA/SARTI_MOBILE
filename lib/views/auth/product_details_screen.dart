@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final String title;
@@ -38,7 +39,13 @@ class ProductDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              // Navegar a ShoppingCartScreen al hacer clic en el ícono del carrito
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ShoppingCartScreen()),
+              );
+            },
           ),
         ],
       ),
@@ -163,7 +170,14 @@ class ProductDetailScreen extends StatelessWidget {
 
               Center(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Navegar a ShoppingCartScreen al hacer clic en "Comprar ahora"
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ShoppingCartScreen()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
