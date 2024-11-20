@@ -43,12 +43,12 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   // Emprendedores Card
                   _buildCategoryCard(
-                    imagePath: 'assets/logo/ICON_SARTI.png',
+                    imagePath: 'assets/logo/ICON-SARTI.png',
                     title: 'Emprendedores',
                   ),
                   // Mejores Calificados Card
                   _buildCategoryCard(
-                    imagePath: 'assets/logo/ICON_SARTI.png',
+                    imagePath: 'assets/logo/ICON-SARTI.png',
                     title: 'Mejores calificados',
                   ),
                 ],
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                   context,
                   title: "Pulsera de bob y patricio estrella",
                   price: 57.90,
-                  imageUrl: 'assets/logo/ICON_SARTI.png',
+                  imageUrl: 'assets/logo/ICON-SARTI.png',
                   description: "Una pulsera divertida con personajes icónicos.",
                 );
               },

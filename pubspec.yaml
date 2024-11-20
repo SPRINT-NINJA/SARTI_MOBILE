@@ -65,7 +65,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/logo/ICON_SARTI.png
+    - assets/logo/ICON-SARTI.png
     - assets/delivery/peding_delivery.png
     - assets/delivery/awaiting_delivery.png
     - assets/delivery/successful_delivery.png

@@ -29,7 +29,7 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: 40),
             Image.asset(
-              'assets/logo/ICON_SARTI.png',
+              'assets/logo/ICON-SARTI.png',
               height: 200,
             ),
             SizedBox(height: 40),

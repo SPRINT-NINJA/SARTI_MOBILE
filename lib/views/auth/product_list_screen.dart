@@ -52,7 +52,7 @@ class ProductListScreen extends StatelessWidget {
                           builder: (context) => ProductDetailScreen(
                             title: 'Bebida artesanal', // Título del producto
                             imageUrl:
-                                'assets/logo/ICON_SARTI.png', // URL de la imagen
+                                'assets/logo/ICON-SARTI.png', // URL de la imagen
                             price: 150.0, // Precio del producto
                             description:
                                 'Descripción del producto', // Descripción
@@ -75,7 +75,7 @@ class ProductListScreen extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.asset(
-                                  'assets/logo/ICON_SARTI.png',
+                                  'assets/logo/ICON-SARTI.png',
                                   height: 80,
                                   width: 80,
                                   fit: BoxFit.cover,
