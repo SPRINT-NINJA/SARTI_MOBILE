@@ -41,7 +41,9 @@ dependencies:
   form_field_validator: ^1.1.0
   dart_jsonwebtoken: ^2.14.1
   dio: ^5.7.0
-
+  intl: ^0.18.0
+  animate_do: ^2.0.0
+  video_player: ^2.9.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -66,10 +68,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/logo/ICON-SARTI.png
-    - assets/delivery/peding_delivery.png
-    - assets/delivery/awaiting_delivery.png
-    - assets/delivery/successful_delivery.png
+    - assets/logo/
+    - assets/delivery/
+    - assets/videos/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

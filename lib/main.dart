@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sarti_mobile/test/config/theme/app_theme.dart';
+import 'package:sarti_mobile/test/presentation/provider/discover_provider.dart';
 import 'package:sarti_mobile/test/presentation/screens/chat/chat_screen.dart';
+import 'package:sarti_mobile/test/presentation/screens/discover/discover_screen.dart';
 import 'package:sarti_mobile/test/providers/chat_provider.dart';
 
 void main() {
@@ -15,13 +17,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(
+            lazy: false, create: (_) => DiscoverProvider()..loadNextPage()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Yes or no',
-          theme: AppTheme(selectedColor: 5).theme(),
-          home: const ChatScreen()),
+          title: 'TokTik',
+          theme: AppTheme().getTheme(),
+          home: const DiscoverScreen()),
     );
   }
 }
