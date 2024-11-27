@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/views/auth/login_screen.dart';
-import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
-import 'package:sarti_mobile/views/auth/product_list_screen.dart';
-
-import 'package:sarti_mobile/views/auth/home_screen.dart';
-import 'package:sarti_mobile/views/auth/top_rated.dart';
+import 'package:sarti_mobile/config/app_theme.dart';
+import 'package:sarti_mobile/src/auth/create_account/views/create_account__business_view.dart';
+import 'package:sarti_mobile/src/auth/create_account/views/create_account_customer_view.dart';
+import 'package:sarti_mobile/src/auth/create_account/views/create_account_delivery_view.dart';
+import 'package:sarti_mobile/src/auth/create_account/views/create_account_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,10 +15,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.orange,
-        ),
-        home: ProductosScreen());
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme(selectedColor: 0).theme(),
+      home: const CreateAccountCustomerView(),
+    );
   }
 }
