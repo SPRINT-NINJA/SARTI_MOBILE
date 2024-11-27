@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/src/auth/create_account/widgets/button_fill.dart';
+import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 
-class CreateAccountBusinessView extends StatelessWidget {
-  const CreateAccountBusinessView({super.key});
+class CreateAccountCustomerView extends StatelessWidget {
+  const CreateAccountCustomerView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class CreateAccountBusinessView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text('Crea tu cuenta de emprendedor', style: TextStyle(
+                const Text('Crea tu cuenta de repartidor', style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ), textAlign: TextAlign.center,  ),
@@ -38,25 +38,13 @@ class CreateAccountBusinessView extends StatelessWidget {
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Nombre de tu negocio',
+                          labelText: 'Nombre completo',
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Descripción de tu negocio',
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Ubicación de tu negocio',
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Correo electrónico',
+                          labelText: 'Dirección de entrega',
                         ),
                       ),
                       const SizedBox(height: 50),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/src/auth/create_account/widgets/button_fill.dart';
+import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 
-class CreateAccountCustomerView extends StatelessWidget {
-  const CreateAccountCustomerView({super.key});
+class CreateAccountDeliveryView extends StatelessWidget {
+  const CreateAccountDeliveryView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,19 @@ class CreateAccountCustomerView extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Dirección de entrega',
+                          labelText: 'Foto de rostro',
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Foto de identificación oficial parte frontal (INE, pasaporte, licencia)',
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Foto de identificación oficial parte trasera (INE, pasaporte, licencia)',
                         ),
                       ),
                       const SizedBox(height: 50),

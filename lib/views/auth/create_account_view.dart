@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/src/auth/create_account/widgets/button_fill_icon.dart';
+import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
 
 class CreateAccountView extends StatelessWidget {
   const CreateAccountView({super.key});

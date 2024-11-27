@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/src/auth/create_account/widgets/button_fill.dart';
+import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 
-class CreateAccountDeliveryView extends StatelessWidget {
-  const CreateAccountDeliveryView({super.key});
+class CreateAccountBusinessView extends StatelessWidget {
+  const CreateAccountBusinessView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class CreateAccountDeliveryView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text('Crea tu cuenta de repartidor', style: TextStyle(
+                const Text('Crea tu cuenta de emprendedor', style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ), textAlign: TextAlign.center,  ),
@@ -38,25 +38,25 @@ class CreateAccountDeliveryView extends StatelessWidget {
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Nombre completo',
+                          labelText: 'Nombre de tu negocio',
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Foto de rostro',
+                          labelText: 'Descripción de tu negocio',
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Foto de identificación oficial parte frontal (INE, pasaporte, licencia)',
+                          labelText: 'Ubicación de tu negocio',
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'Foto de identificación oficial parte trasera (INE, pasaporte, licencia)',
+                          labelText: 'Correo electrónico',
                         ),
                       ),
                       const SizedBox(height: 50),
