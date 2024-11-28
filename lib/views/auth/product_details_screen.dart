@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/utils/colors.dart';
-import 'package:sarti_mobile/views/customer/shopping_scree.dart';
+import 'package:sarti_mobile/views/auth/email_login_screen.dart'; // Asegúrate de que la ruta sea correcta
+import 'package:sarti_mobile/utils/colors.dart'; // Para el color de la app (si lo usas)
 
 class ProductDetailScreen extends StatelessWidget {
   final String title;
@@ -16,9 +16,9 @@ class ProductDetailScreen extends StatelessWidget {
     required this.price,
     required this.description,
     this.additionalImages = const [
-      'assets/logo/ICON-SARTI.png', // Primera imagen adicional
-      'assets/logo/ICON-SARTI.png', // Segunda imagen adicional
-      'assets/logo/ICON-SARTI.png', // Tercera imagen adicional
+      'assets/logo/ICON-SARTI.png', // Imagen de ejemplo
+      'assets/logo/ICON-SARTI.png', // Imagen de ejemplo
+      'assets/logo/ICON-SARTI.png', // Imagen de ejemplo
     ],
   }) : super(key: key);
 
@@ -27,7 +27,7 @@ class ProductDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.primaryColor, // Cambiar a tu color preferido
         iconTheme: IconThemeData(color: Colors.white),
         elevation: 0,
         leading: IconButton(
@@ -40,11 +40,8 @@ class ProductDetailScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.shopping_cart, color: Colors.white),
             onPressed: () {
-              // Navegar a ShoppingCartScreen al hacer clic en el ícono del carrito
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ShoppingCartScreen()),
-              );
+              // Navegar al carrito (añadir carrito a la aplicación)
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => ShoppingCartScreen()));
             },
           ),
         ],
@@ -138,20 +135,6 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               SizedBox(height: 8),
 
-              Row(
-                children: [
-                  Text(
-                    'Cantidad: ',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                  ),
-                  Text(
-                    '1 unidad ',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-
               // Descripción
               Text(
                 "Lo que tienes que saber del producto:",
@@ -168,15 +151,12 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               SizedBox(height: 16),
 
+              // Botón de "Comprar ahora"
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navegar a ShoppingCartScreen al hacer clic en "Comprar ahora"
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ShoppingCartScreen()),
-                    );
+                    // Aquí se llama al modal si no está autenticado
+                    showLoginPromptModal(context); 
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -199,6 +179,7 @@ class ProductDetailScreen extends StatelessWidget {
     );
   }
 
+  // Función para mostrar la imagen completa
   void _showFullImage(BuildContext context, String imageUrl) {
     showDialog(
       context: context,
@@ -219,4 +200,36 @@ class ProductDetailScreen extends StatelessWidget {
       },
     );
   }
+}
+
+// Modal que se muestra cuando el usuario no está autenticado
+void showLoginPromptModal(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("¿Deseas iniciar sesión?"),
+        content: Text("Para comprar este producto, debes iniciar sesión."),
+        actions: <Widget>[
+          // Botón "Sí", que lleva al usuario a la pantalla de login
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EmailLoginScreen()), // Aquí diriges al usuario al login
+              );
+            },
+            child: Text("Sí"),
+          ),
+          // Botón "No", que cierra el modal
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el modal
+            },
+            child: Text("No"),
+          ),
+        ],
+      );
+    },
+  );
 }

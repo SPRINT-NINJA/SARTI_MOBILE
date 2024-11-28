@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/config/app_theme.dart';
-import 'package:sarti_mobile/views/auth/create_account_customer_view.dart';
+import 'package:sarti_mobile/views/auth/product_details_screen.dart';
+import 'package:sarti_mobile/views/auth/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme(selectedColor: 0).theme(),
-      home: const CreateAccountCustomerView(),
+      home:  LoginScreen(
+      ),
     );
   }
 }
