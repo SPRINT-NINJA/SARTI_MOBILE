@@ -43,11 +43,18 @@ class AppTheme {
       primarySwatch: createMaterialColor(_colorsTheme[selectedColor]),
       primaryColor: _colorsTheme[selectedColor],
       appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: _primaryColor,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 25,
           fontWeight: FontWeight.bold,
+        ),
+        actionsIconTheme: IconThemeData(
+          color: Colors.white,
+          size: 30,
         ),
       ),
     );
