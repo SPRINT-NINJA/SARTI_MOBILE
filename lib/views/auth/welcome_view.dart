@@ -173,7 +173,6 @@ class _StartSessionButton extends StatelessWidget {
 
 class _LabelInvitedUser extends StatelessWidget {
   const _LabelInvitedUser({
-    super.key,
     required this.theme,
   });
 

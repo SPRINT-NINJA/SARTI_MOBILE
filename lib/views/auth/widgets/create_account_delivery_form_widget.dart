@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/config/constant/environment.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 
 class CreateAccountDeliveryFormWidget extends StatelessWidget {

@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/config/router/app_router.dart';
 
 class SlideInfo {
   final String title;
@@ -129,7 +128,7 @@ class _Slide extends StatelessWidget {
   final String image;
 
   const _Slide(
-      {super.key,
+      {
       required this.title,
       required this.description,
       required this.image});
