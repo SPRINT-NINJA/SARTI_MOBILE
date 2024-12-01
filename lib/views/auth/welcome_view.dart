@@ -144,7 +144,6 @@ class _CreateAccountButton extends StatelessWidget {
 
 class _StartSessionButton extends StatelessWidget {
   const _StartSessionButton({
-    super.key,
     required this.theme,
   });
 
