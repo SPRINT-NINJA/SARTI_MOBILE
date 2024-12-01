@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/utils/enums.dart';
+import 'package:sarti_mobile/config/constant/enums.dart';
+import 'package:sarti_mobile/config/constant/environment.dart';
+import 'package:sarti_mobile/views/screens.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
 
 class WelcomeView extends StatelessWidget {
@@ -75,19 +77,19 @@ class _CreateAccountButton extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
                   child: Column(
                     children: [
-                      const Column(
+                      Column(
                         children: [
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Text(
-                            '¡Crea tu cuenta y forma parte de SARTI!',
-                            style: TextStyle(
+                            '¡Crea tu cuenta y forma parte de SARTI ${Environment.API_VERSION}!',
+                            style:const  TextStyle(
                               fontSize: 35,
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
                             ), textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'Selecciona el tipo de cuenta que deseas crear',
                             style: TextStyle(
                               fontSize: 20,
@@ -103,17 +105,17 @@ class _CreateAccountButton extends StatelessWidget {
                           ButtonFillIcon(theme: theme, textButton: 'Repartidor', onPressed: () {
                             context.push('/create-account/${ERoles.delivery}');
                             // close the modal
-                            Navigator.pop(context);
+                            context.pop();
                           }, icon: Icons.delivery_dining),
                           const SizedBox(height: 34),
                           ButtonFillIcon(theme: theme, textButton: 'Emprendedor', onPressed: () {
                             context.push('/create-account/${ERoles.business}');
-                            Navigator.pop(context);
+                            context.pop();
                           }, icon: Icons.business_center),
                           const SizedBox(height: 34),
                           ButtonFillIcon(theme: theme, textButton: 'Cliente', onPressed: () {
-                            context.push('/create-account/${ERoles.costumer}');
-                            Navigator.pop(context);
+                            context.pushNamed(CreateAccountView.name, pathParameters: {'role': ERoles.costumer.toString()});
+                            context.pop();
                           }, icon: Icons.person),
                         ],
                       ),

@@ -16,7 +16,7 @@ class CreateAccountCostumerFormWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text('Crea tu cuenta de repartidor', style: TextStyle(
+          const Text('Crea tu cuenta de cliente', style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ), textAlign: TextAlign.center,  ),

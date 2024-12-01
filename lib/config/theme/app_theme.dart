@@ -57,6 +57,17 @@ class AppTheme {
           size: 30,
         ),
       ),
+      scaffoldBackgroundColor: Colors.white,
+      filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all<Color>(_primaryColor),
+        )
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all<Color>(_primaryColor),
+        )
+      ),
     );
   }
 }
