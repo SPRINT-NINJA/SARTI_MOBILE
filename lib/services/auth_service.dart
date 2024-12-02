@@ -25,7 +25,6 @@ class AuthService {
     }
   }
 
-  /// Login with email and password
   static Future<String?> login(String email, String password) async {
     try {
       final response = await _dio.post(

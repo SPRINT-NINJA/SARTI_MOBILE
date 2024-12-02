@@ -34,9 +34,7 @@ class ValidateEmailView extends StatelessWidget {
                     : 'Por favor ingresa un correo válido',
               ),
               keyboardType: TextInputType.emailAddress,
-              onChanged: (value) {
-                // Rebuild para validar en tiempo real
-              },
+              onChanged: (value) {},
             ),
             SizedBox(height: 40.0),
             Align(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/utils/colors.dart';
+import 'validate_email_view.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
-import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   final String userEmail;
@@ -14,7 +14,7 @@ class PasswordLoginScreen extends StatefulWidget {
 
 class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
   final TextEditingController passwordController = TextEditingController();
-  bool _obscureText = true;
+  bool _obscureText = true; // Controla la visibilidad de la contraseña
 
   @override
   Widget build(BuildContext context) {
@@ -69,17 +69,17 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _obscureText = !_obscureText;
+                      _obscureText = !_obscureText; // Cambia la visibilidad
                     });
                   },
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 40), // Espacio antes del botón
             Align(
               alignment: Alignment.center,
               child: SizedBox(
-                width: 120,
+                width: 120, // Ancho del botón
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -88,7 +88,39 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                         TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
-                  onPressed: () => _handleLogin(context),
+                  onPressed: () async {
+                    final email = widget.userEmail;
+                    final password = passwordController.text;
+
+                    if (password.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("La contraseña es obligatoria."),
+                        ),
+                      );
+                      return;
+                    }
+
+                    try {
+                      final token = await AuthService.login(email, password);
+                      if (token != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Inicio de sesión exitoso')),
+                        );
+                        // Redirigir a la pantalla principal o dashboard
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Credenciales incorrectas, intente de nuevo.')),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error al iniciar sesión.')),
+                      );
+                    }
+                  },
                   child: Text('Continuar'),
                 ),
               ),
@@ -98,7 +130,9 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ValidateEmailView()),
+                  MaterialPageRoute(
+                    builder: (context) => ValidateEmailView(),
+                  ),
                 );
               },
               child: Text(
@@ -110,32 +144,5 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
         ),
       ),
     );
-  }
-
-  void _handleLogin(BuildContext context) async {
-    if (passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("La contraseña es obligatoria.")),
-      );
-      return;
-    }
-
-    try {
-      final token =
-          await AuthService.login(widget.userEmail, passwordController.text);
-      if (token != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Inicio de sesión exitoso.")),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Correo o contraseña incorrectos.")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Ocurrió un error al iniciar sesión.")),
-      );
-    }
   }
 }
