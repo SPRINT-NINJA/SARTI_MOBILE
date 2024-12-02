@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class PasswordLoginScreen extends StatefulWidget {
 
 class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
   final TextEditingController passwordController = TextEditingController();
-  bool _obscureText = true; // Controla la visibilidad de la contraseña
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                   ),
                   SizedBox(width: 10),
                   Text(
-                    'usuario',
+                    widget.userEmail,
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -68,41 +69,31 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _obscureText = !_obscureText; // Cambia la visibilidad
+                      _obscureText = !_obscureText;
                     });
                   },
                 ),
               ),
             ),
-            SizedBox(height: 40), // Espacio antes del botón
+            SizedBox(height: 40),
             Align(
               alignment: Alignment.center,
               child: SizedBox(
-                width: 120, // Ancho del botón
+                width: 120,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: AppColors.primaryColor,
-                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    textStyle:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
-                  onPressed: () {
-                    // Lógica para continuar con la autenticación
-                  },
+                  onPressed: () => _handleLogin(context),
                   child: Text('Continuar'),
                 ),
               ),
             ),
             SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                // Acción para crear cuenta
-              },
-              child: Text(
-                'Crear cuenta',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
             TextButton(
               onPressed: () {
                 Navigator.push(
@@ -119,5 +110,32 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
         ),
       ),
     );
+  }
+
+  void _handleLogin(BuildContext context) async {
+    if (passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("La contraseña es obligatoria.")),
+      );
+      return;
+    }
+
+    try {
+      final token =
+          await AuthService.login(widget.userEmail, passwordController.text);
+      if (token != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Inicio de sesión exitoso.")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Correo o contraseña incorrectos.")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Ocurrió un error al iniciar sesión.")),
+      );
+    }
   }
 }
