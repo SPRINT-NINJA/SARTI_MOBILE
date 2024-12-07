@@ -74,52 +74,54 @@ class _CreateAccountButton extends StatelessWidget {
               context: context,
               builder: (context) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
-                  child: Column(
-                    children: [
-                      Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          Text(
-                            '¡Crea tu cuenta y forma parte de SARTI ${Environment.API_VERSION}!',
-                            style:const  TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                            ), textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Selecciona el tipo de cuenta que deseas crear',
-                            style: TextStyle(
-                              fontSize: 20,
+                  margin: const EdgeInsets.all(30),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              '¡Crea tu cuenta y forma parte de SARTI ${Environment.API_VERSION}!',
+                              style:const  TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                              ), textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          const SizedBox(height: 34),
-                          ButtonFillIcon(theme: theme, textButton: 'Repartidor', onPressed: () {
-                            context.push('/create-account/${ERoles.delivery}');
-                            // close the modal
-                            context.pop();
-                          }, icon: Icons.delivery_dining),
-                          const SizedBox(height: 34),
-                          ButtonFillIcon(theme: theme, textButton: 'Emprendedor', onPressed: () {
-                            context.push('/create-account/${ERoles.business}');
-                            context.pop();
-                          }, icon: Icons.business_center),
-                          const SizedBox(height: 34),
-                          ButtonFillIcon(theme: theme, textButton: 'Cliente', onPressed: () {
-                            context.pushNamed(CreateAccountView.name, pathParameters: {'role': ERoles.costumer.toString()});
-                            context.pop();
-                          }, icon: Icons.person),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(height: 20),
+                            const Text(
+                              'Selecciona el tipo de cuenta que deseas crear',
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const SizedBox(height: 34),
+                            ButtonFillIcon(theme: theme, textButton: 'Repartidor', onPressed: () {
+                              context.push('/create-account/${ERoles.delivery}');
+                              // close the modal
+                              context.pop();
+                            }, icon: Icons.delivery_dining),
+                            const SizedBox(height: 34),
+                            ButtonFillIcon(theme: theme, textButton: 'Emprendedor', onPressed: () {
+                              context.push('/create-account/${ERoles.business}');
+                              context.pop();
+                            }, icon: Icons.business_center),
+                            const SizedBox(height: 34),
+                            ButtonFillIcon(theme: theme, textButton: 'Cliente', onPressed: () {
+                              context.pushNamed(CreateAccountView.name, pathParameters: {'role': ERoles.costumer.toString()});
+                              context.pop();
+                            }, icon: Icons.person),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

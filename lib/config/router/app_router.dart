@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/views/screens.dart';
 
+import '../constant/enums.dart';
+
 final appRouter = GoRouter(
-  // initialLocation: '/create-account/${ERoles.delivery}',
-  initialLocation: '/tutorial',
+  initialLocation: '/create-account/${ERoles.delivery}',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
