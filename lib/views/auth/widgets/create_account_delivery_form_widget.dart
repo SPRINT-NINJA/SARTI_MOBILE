@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/viewmodels/blocs/auth/register/register_cubit.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 import 'package:sarti_mobile/widgets/auth/custom_text_form_field.dart';
+
+import '../../../viewmodels/create_account_delivery_provider.dart';
 
 class CreateAccountDeliveryFormWidget extends StatelessWidget {
   const CreateAccountDeliveryFormWidget({
@@ -19,15 +20,13 @@ class CreateAccountDeliveryFormWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 35, 30, 10),
-      child: BlocProvider(create: (_) => RegisterCubit(),
-        child: PageView(
-          controller: controller,
-          children: [
-            _SectionPersonalData(theme: theme, controller: controller),
-            _SectionPhoto(theme: theme),
-            _SectionIdentification(theme: theme, controller: controller),
-          ],
-        ),
+      child: PageView(
+        controller: controller,
+        children: [
+          _SectionPersonalData(theme: theme, controller: controller),
+          _SectionPhoto(theme: theme),
+          _SectionIdentification(theme: theme, controller: controller),
+        ],
       ),
     );
   }
@@ -72,7 +71,7 @@ class _SectionPersonalData extends StatelessWidget {
   }
 }
 
-class _RegisterFormPersonalData extends StatelessWidget {
+class _RegisterFormPersonalData extends ConsumerWidget {
   const _RegisterFormPersonalData({
     required this.theme,
     required this.controller,
@@ -82,18 +81,18 @@ class _RegisterFormPersonalData extends StatelessWidget {
   final PageController controller;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
-    final registerCubit = context.watch<RegisterCubit>();
-    final name = registerCubit.state.name;
+    final sectionPersonalData = ref.watch(createAccountDeliveryProvider);
+    final sectionPersonalDataProvider = ref.read(createAccountDeliveryProvider.notifier);
 
     return Form(
       child: Column(
         children: [
           CustomTextFormField(
             label: 'Nombre(s)',
-            onChanged: registerCubit.updateName,
-            errorMsg: name.errMsg,
+            onChanged: sectionPersonalDataProvider.onNameChanged,
+            errorMsg: sectionPersonalData.isFormPosted ? sectionPersonalData.name.errMsg : null,
           ),
           const SizedBox(height: 20),
           TextFormField(
@@ -118,20 +117,17 @@ class _RegisterFormPersonalData extends StatelessWidget {
               theme: theme,
               textButton: 'Continuar',
               onPressed: () {
-
-                registerCubit.onSubmitted();
-
-
-                controller.nextPage(
+                sectionPersonalDataProvider.onSubmitted();
+               /* controller.nextPage(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeIn,
-                );
+                );*/
               }),
           const SizedBox(height: 20),
           SizedBox(
             width: 300,
             height: 50,
-            child: OutlinedButton(
+            child: TextButton(
               onPressed: () {
                 context.pop();
               },

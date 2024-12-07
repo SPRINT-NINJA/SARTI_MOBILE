@@ -36,12 +36,12 @@ class AppTheme {
   ThemeData theme() {
 
 
-    final borderInput = UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: shadeColor(_colorsTheme[selectedColor], 0.8),
+    final borderInput = OutlineInputBorder(
+      borderSide: const BorderSide(
+        color: Color(0xFFE0E0E0),
       ),
+      borderRadius: BorderRadius.circular(10),
     );
-
 
     return ThemeData(
       useMaterial3: true,
@@ -65,6 +65,10 @@ class AppTheme {
       scaffoldBackgroundColor: Colors.white,
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
+
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+          ),
           backgroundColor: WidgetStateProperty.all<Color>(
             _colorsTheme[selectedColor],
           ),
@@ -99,10 +103,15 @@ class AppTheme {
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         enabledBorder: borderInput,
         focusedBorder: borderInput.copyWith(
+          borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            width: 2,
             color: _colorsTheme[selectedColor],
           ),
         ),
