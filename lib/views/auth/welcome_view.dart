@@ -25,31 +25,33 @@ class WelcomeView extends StatelessWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            margin: const EdgeInsets.only(top: 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _LabelInvitedUser(theme: theme),
-                const SizedBox(height: 80),
-                Image.asset(
-                  'assets/images/logo_sarti_leading_fill.png',
-                  height: 200,
-                ),
-                const SizedBox(height: 80),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      _StartSessionButton(theme: theme),
-                      const SizedBox(height: 20),
-                      _CreateAccountButton(theme: theme),
-                    ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 50),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _LabelInvitedUser(theme: theme),
+                  const SizedBox(height: 80),
+                  Image.asset(
+                    'assets/images/logo_sarti_leading_fill.png',
+                    height: 200,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 80),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        _StartSessionButton(theme: theme),
+                        const SizedBox(height: 20),
+                        _CreateAccountButton(theme: theme),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

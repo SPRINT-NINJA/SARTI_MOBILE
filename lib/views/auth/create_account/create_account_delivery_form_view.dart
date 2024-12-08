@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/services/camera/camera_gallery_service_impl.dart';
-import 'package:sarti_mobile/viewmodels/create_account/create_account_delivery_credentials_provider.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 import 'package:sarti_mobile/widgets/auth/custom_text_form_field.dart';
+import 'package:sarti_mobile/widgets/auth/password_text_form_field.dart';
 
 import '../../../viewmodels/create_account/create_account_delivery_images_provider.dart';
 import '../../../viewmodels/create_account/create_account_delivery_provider.dart';
@@ -23,40 +23,43 @@ class CreateAccountDeliveryView extends ConsumerWidget {
     final PageController controller = PageController();
     final ThemeData theme = Theme.of(context);
 
-    final currentStep = ref.watch(createAccountDeliveryProvider).currentStep;
-    final createAccountDeliveryProviderNotifier = ref.read(createAccountDeliveryProvider.notifier);
-
-
     //section credentials
     final images = ref.watch(createAccountDeliveryImagesProvider).imageList;
 
+    final stateCreateAccountDeliver = ref.watch(createAccountDeliveryProvider);
+
+    final notifierCreateAccountDelivery =
+        ref.read(createAccountDeliveryProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crea tu cuenta de repartidor'),
       ),
       body: PageView(
-        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
         controller: controller,
-        onPageChanged:
-            createAccountDeliveryProviderNotifier.onCurrentStepChanged,
+        onPageChanged: notifierCreateAccountDelivery.onCurrentStepChanged,
         children: [
           _SectionPersonalData(
-              theme: theme, onNext: () => nextStep(controller)),
+            theme: theme,
+            onNext: () => nextStep(controller),
+            notifier: notifierCreateAccountDelivery,
+            state: stateCreateAccountDeliver,
+          ),
           _SectionCredentialsUser(
-              theme: theme,
-              onNext: () => nextStep(controller),
-              onPrevious: () => previousStep(controller)),
+            theme: theme,
+            onNext: () => nextStep(controller),
+            onPrevious: () => previousStep(controller),
+            notifier: notifierCreateAccountDelivery,
+            state: stateCreateAccountDeliver,
+          ),
           _SectionUploadCredentialPhotos(
               theme: theme,
               onNext: () => nextStep(controller),
               onPrevious: () => previousStep(controller),
-              images: images
-          ),
+              images: images),
         ],
       ),
-      bottomNavigationBar:
-          buildBottomNavigationBar(ref, controller, currentStep),
     );
   }
 
@@ -98,17 +101,19 @@ class CreateAccountDeliveryView extends ConsumerWidget {
 }
 
 class _SectionPersonalData extends ConsumerWidget {
-  const _SectionPersonalData({required this.theme, required this.onNext});
+  const _SectionPersonalData(
+      {required this.theme,
+      required this.onNext,
+      required this.state,
+      required this.notifier});
 
   final ThemeData theme;
   final VoidCallback onNext;
+  final CreateAccountDeliveryState state;
+  final CreateAccountDeliveryNotifier notifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final createAccountDeliveryProviderData =
-        ref.watch(createAccountDeliveryProvider);
-    final createAccountDeliveryProviderNotifier =
-        ref.read(createAccountDeliveryProvider.notifier);
 
     return SingleChildScrollView(
       child: Padding(
@@ -135,23 +140,19 @@ class _SectionPersonalData extends ConsumerWidget {
                 children: [
                   CustomTextFormField(
                     label: 'Nombre(s)',
-                    onChanged:
-                        createAccountDeliveryProviderNotifier.onNameChanged,
-                    errorMsg: createAccountDeliveryProviderData.isFormPosted
-                        ? createAccountDeliveryProviderData.name.errMsg
-                        : null,
-                    initialValue: createAccountDeliveryProviderData.name.value,
+                    onChanged: notifier.onNameChanged,
+                    errorMsg:
+                        state.isFormPersonalPosted ? state.name.errMsg : null,
+                    initialValue: state.name.value,
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
                     label: 'Primer apellido',
-                    onChanged:
-                        createAccountDeliveryProviderNotifier.onSurnameChanged,
-                    errorMsg: createAccountDeliveryProviderData.isFormPosted
-                        ? createAccountDeliveryProviderData.surname.errMsg
+                    onChanged: notifier.onSurnameChanged,
+                    errorMsg: state.isFormPersonalPosted
+                        ? state.surname.errMsg
                         : null,
-                    initialValue:
-                        createAccountDeliveryProviderData.surname.value,
+                    initialValue: state.surname.value,
                   ),
                   const SizedBox(height: 20),
                   CustomTextFormField(
@@ -165,23 +166,20 @@ class _SectionPersonalData extends ConsumerWidget {
                             style: TextStyle(color: Colors.grey))
                       ],
                     )),
-                    onChanged:
-                        createAccountDeliveryProviderNotifier.onLastNameChanged,
-                    errorMsg: createAccountDeliveryProviderData.isFormPosted
-                        ? createAccountDeliveryProviderData.lastName.errMsg
+                    onChanged: notifier.onLastNameChanged,
+                    errorMsg: state.isFormPersonalPosted
+                        ? state.lastName.errMsg
                         : null,
-                    initialValue:
-                        createAccountDeliveryProviderData.lastName.value,
+                    initialValue: state.lastName.value,
                   ),
                   const SizedBox(height: 40),
                   ButtonFill(
                       theme: theme,
                       textButton: 'Continuar',
                       onPressed: () {
-                        createAccountDeliveryProviderNotifier.onValidStep(0);
-                        if (!createAccountDeliveryProviderData.steps[0]) return;
-                        createAccountDeliveryProviderNotifier
-                            .onIsFormPostedChanged(false);
+                        notifier.onSubmittedInformationPersonal();
+                        print('isFormPersonalValid: ${state.isFormPersonalValid}');
+                        if (!state.isFormPersonalValid) return;
                         onNext();
                       }),
                   const SizedBox(height: 20),
@@ -207,20 +205,22 @@ class _SectionPersonalData extends ConsumerWidget {
 }
 
 class _SectionCredentialsUser extends ConsumerWidget {
-  const _SectionCredentialsUser(
-      {required this.theme, required this.onNext, required this.onPrevious});
+  const _SectionCredentialsUser({
+    required this.theme,
+    required this.onNext,
+    required this.onPrevious,
+    required this.state,
+    required this.notifier,
+  });
 
   final ThemeData theme;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
+  final CreateAccountDeliveryState state;
+  final CreateAccountDeliveryNotifier notifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final createAccountDeliveryProviderData =
-        ref.watch(createAccountDeliveryCredentialsProvider);
-    final createAccountDeliveryProviderNotifier =
-        ref.read(createAccountDeliveryCredentialsProvider.notifier);
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -246,45 +246,37 @@ class _SectionCredentialsUser extends ConsumerWidget {
                 children: [
                   CustomTextFormField(
                     label: 'Email',
-                    onChanged:
-                        createAccountDeliveryProviderNotifier.onEmailChanged,
-                    errorMsg: createAccountDeliveryProviderData.isFormPosted
-                        ? createAccountDeliveryProviderData.email.errMsg
+                    onChanged: notifier.onEmailChanged,
+                    errorMsg: state.isFormCredentialsPosted
+                        ? state.email.errMsg
                         : null,
-                    initialValue: createAccountDeliveryProviderData.email.value,
+                    initialValue: state.email.value,
                   ),
                   const SizedBox(height: 20),
-                  CustomTextFormField(
+                  PasswordTextFormField(
                     label: 'Password',
-                    onChanged:
-                        createAccountDeliveryProviderNotifier.onPasswordChanged,
-                    errorMsg: createAccountDeliveryProviderData.isFormPosted
-                        ? createAccountDeliveryProviderData.password.errMsg
+                    onChanged: notifier.onPasswordChanged,
+                    errorMsg: state.isFormCredentialsPosted
+                        ? state.password.errMsg
                         : null,
-                    initialValue:
-                        createAccountDeliveryProviderData.password.value,
+                    initialValue: state.password.value,
                   ),
                   const SizedBox(height: 20),
-                  CustomTextFormField(
+                  PasswordTextFormField(
                     label: 'Confirmar Contraseña',
-                    onChanged: createAccountDeliveryProviderNotifier
-                        .onConfirmPasswordChanged,
-                    errorMsg: createAccountDeliveryProviderData.isFormPosted
-                        ? createAccountDeliveryProviderData
-                            .confirmPassword.errMsg
+                    onChanged: notifier.onConfirmPasswordChanged,
+                    errorMsg: state.isFormCredentialsPosted
+                        ? state.confirmPassword.errMsg
                         : null,
-                    initialValue:
-                        createAccountDeliveryProviderData.confirmPassword.value,
+                    initialValue: state.confirmPassword.value,
                   ),
                   const SizedBox(height: 40),
                   ButtonFill(
                       theme: theme,
                       textButton: 'Continuar',
                       onPressed: () {
-                        createAccountDeliveryProviderNotifier.onSubmitted();
-                        if (!createAccountDeliveryProviderData.isValid) return;
-                        createAccountDeliveryProviderNotifier
-                            .onIsFormPostedChanged(false);
+                        notifier.onSubmittedCredentials();
+                        if (!state.isFormCredentialsValid) return;
                         onNext();
                       }),
                   const SizedBox(height: 20),
@@ -355,206 +347,108 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: Column(
-        children: [
-          Icon(
-            Icons.camera_alt,
-            color: theme.primaryColor,
-            size: 100,
-          ),
-          RichText(
-              text: const TextSpan(children: [
-            TextSpan(
-              text: 'Ingresa tus documentos de identificación oficial ',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        child: Column(
+          children: [
+            Icon(
+              Icons.camera_alt,
+              color: theme.primaryColor,
+              size: 100,
             ),
-            TextSpan(
-              text: '(INE, pasaporte, licencia)',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-          ])),
-          const SizedBox(height: 30),
-          SizedBox(
-              height: 200,
-              width: double.infinity,
-              child: _ImageGallery(
-                images: images,
-              )),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-                onPressed: () async {
-                  pickPhoto(ref: ref, isFront: true);
-                },
-                icon: const Icon(Icons.camera_front),
-                label: const Text('Tomar foto frontal')),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-                onPressed: () async {
-                  pickPhoto(ref: ref, isFront: false);
-                },
-                icon: const Icon(Icons.camera_rear),
-                label: const Text('Tomar foto trasera')),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-                onPressed: () async => pickSelfiePhoto(ref: ref),
-                icon: const Icon(Icons.person),
-                label: const Text('Foto de rostro')),
-          ),
-          const SizedBox(height: 40),
-          SizedBox(
-              height: 50,
-              width: double.infinity,
-              child: ButtonFill(
-                onPressed: () {
-                  ref.watch(createAccountDeliveryImagesProvider.notifier).onSubmitted();
-                }, theme: theme, textButton: 'Continuar',
-              )),
-        ],
-      ),
-    );
-  }
-}
-
-class _SectionIdentification extends ConsumerWidget {
-  const _SectionIdentification({required this.theme});
-
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final primaryColor = theme.primaryColor;
-
-    final providerImage = ref.watch(createAccountDeliveryImagesProvider);
-
-    return Column(
-      children: [
-        Icon(
-          Icons.camera_alt,
-          color: theme.primaryColor,
-          size: 100,
-        ),
-        RichText(
-            text: const TextSpan(children: [
-          TextSpan(
-            text: 'Ingresa tus documentos de identificación oficial ',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextSpan(
-            text: '(INE, pasaporte, licencia)',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
-          ),
-        ])),
-        const SizedBox(height: 30),
-
-        Text(
-          'PARTE FRONTAL',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: primaryColor,
-            fontSize: 20,
-          ),
-          textAlign: TextAlign.start,
-        ),
-
-        const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-              onPressed: () async {
-                final photoPath = await CameraGalleryServiceImpl().takePhoto();
-                if (photoPath == null) return;
-                ref
-                    .read(createAccountDeliveryImagesProvider.notifier)
-                    .onImageFrontIDChanged(photoPath);
-                ref
-                    .read(createAccountDeliveryProvider.notifier)
-                    .onCurrentStepChanged(1);
-              },
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Tomar foto')),
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'O',
-          style: TextStyle(
-            fontSize: 16,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-              onPressed: () async {
-                final photoPath =
-                    await CameraGalleryServiceImpl().selectPhoto();
-                if (photoPath == null) return;
-                ref
-                    .read(createAccountDeliveryImagesProvider.notifier)
-                    .onImageFrontIDChanged(photoPath);
-                ref
-                    .read(createAccountDeliveryProvider.notifier)
-                    .onCurrentStepChanged(1);
-              },
-              icon: const Icon(Icons.photo_library),
-              label: const Text('Abrir galería')),
-        ),
-        const SizedBox(height: 50),
-        providerImage.imageFrontID.errMsg != null
-            ? Text(
-                providerImage.imageFrontID.errMsg ?? '',
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
+            RichText(
+                text: const TextSpan(children: [
+              TextSpan(
+                text: 'Ingresa tus documentos de identificación oficial ',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
-              )
-            : const SizedBox(),
-        ButtonFill(
-            theme: theme,
-            textButton:
-                providerImage.imageFrontID.isValid ? 'Guardar' : 'Continuar',
-            onPressed: () {
-              ref
-                  .read(createAccountDeliveryImagesProvider.notifier)
-                  .onValidateID();
-              if (!providerImage.isValidImageID) return;
-              ref
-                  .read(createAccountDeliveryProvider.notifier)
-                  .onCurrentStepChanged(1);
-            }),
-        const SizedBox(height: 20),
-        // back button
-        IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            ref
-                .read(createAccountDeliveryProvider.notifier)
-                .onCurrentStepChanged(0);
-          },
+              ),
+              TextSpan(
+                text: '(INE, pasaporte, licencia)',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ])),
+            const SizedBox(height: 30),
+            SizedBox(
+                height: 200,
+                width: double.infinity,
+                child: _ImageGallery(
+                  images: images,
+                )),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                  onPressed: () async {
+                    pickPhoto(ref: ref, isFront: true);
+                  },
+                  icon: const Icon(Icons.camera_front),
+                  label: const Text('Tomar foto frontal')),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                  onPressed: () async {
+                    pickPhoto(ref: ref, isFront: false);
+                  },
+                  icon: const Icon(Icons.camera_rear),
+                  label: const Text('Tomar foto trasera')),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                  onPressed: () async => pickSelfiePhoto(ref: ref),
+                  icon: const Icon(Icons.person),
+                  label: const Text('Foto de rostro')),
+            ),
+
+            //error message
+            ref.watch(createAccountDeliveryImagesProvider).isFormPosted &&
+                    !ref.watch(createAccountDeliveryImagesProvider).isValid
+                ? RichText(
+                    text: TextSpan(
+                    text: ref
+                            .watch(createAccountDeliveryImagesProvider)
+                            .imageOfFace
+                            .errMsg ??
+                        ref
+                            .watch(createAccountDeliveryImagesProvider)
+                            .imageFrontID
+                            .errMsg ??
+                        ref
+                            .watch(createAccountDeliveryImagesProvider)
+                            .imageRearID
+                            .errMsg ??
+                        '',
+                    style: TextStyle(color: Colors.red),
+                  ))
+                : const SizedBox(),
+
+            const SizedBox(height: 20),
+
+            SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: ButtonFill(
+                  onPressed: () {
+                    ref
+                        .watch(createAccountDeliveryImagesProvider.notifier)
+                        .onSubmitted();
+                  },
+                  theme: theme,
+                  textButton: 'Registar cuenta',
+                )),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -597,174 +491,5 @@ class _ImageGallery extends StatelessWidget {
             ),
           );
         }).toList());
-  }
-}
-
-class _SectionPhoto extends StatelessWidget {
-  const _SectionPhoto({
-    required this.theme,
-    this.currentStep = 2,
-    required this.controller,
-  });
-
-  final int currentStep;
-  final PageController controller;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Column(
-          children: [
-            Icon(
-              Icons.camera_alt,
-              size: 50,
-            ),
-            Text(
-              'Ingresa tu foto de rostro',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        const SizedBox(height: 0),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Foto de rostro',
-                ),
-              ),
-              const SizedBox(height: 50),
-              ButtonFill(
-                  theme: theme,
-                  textButton: 'Continuar',
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/create-account-business-2');
-                  }),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SectionCredentials extends StatelessWidget {
-  const _SectionCredentials({
-    required this.theme,
-    required this.controller,
-  });
-
-  final ThemeData theme;
-  final PageController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.person,
-                color: theme.primaryColor,
-              ),
-              const SizedBox(width: 10),
-              const Text(
-                'Crea tu cuenta de repartidor',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          _RegisterFormCredentials(theme: theme, controller: controller),
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class _RegisterFormCredentials extends ConsumerWidget {
-  const _RegisterFormCredentials({
-    required this.theme,
-    required this.controller,
-  });
-
-  final ThemeData theme;
-  final PageController controller;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final sectionPersonalData = ref.watch(createAccountDeliveryProvider);
-    final sectionPersonalDataProvider =
-        ref.read(createAccountDeliveryProvider.notifier);
-
-    return Form(
-      child: Column(
-        children: [
-          CustomTextFormField(
-            label: 'Correo Electrónico',
-            onChanged: sectionPersonalDataProvider.onEmailChanged,
-            errorMsg: sectionPersonalData.isFormPosted
-                ? sectionPersonalData.email.errMsg
-                : null,
-          ),
-          const SizedBox(height: 20),
-          CustomTextFormField(
-            label: 'Contraseña',
-            obscureText: true,
-            onChanged: sectionPersonalDataProvider.onPasswordChanged,
-            errorMsg: sectionPersonalData.isFormPosted
-                ? sectionPersonalData.password.errMsg
-                : null,
-          ),
-          const SizedBox(height: 20),
-          CustomTextFormField(
-            label: 'Confirmar Contraseña',
-            obscureText: true,
-            onChanged: sectionPersonalDataProvider.onConfirmPasswordChanged,
-            errorMsg: sectionPersonalData.isFormPosted
-                ? sectionPersonalData.confirmPassword.errMsg
-                : null,
-          ),
-          const SizedBox(height: 40),
-          ButtonFill(
-              theme: theme,
-              textButton: 'Continuar',
-              onPressed: () {
-                sectionPersonalDataProvider.onSubmitted();
-                if (!sectionPersonalData.isValid) return;
-
-                controller.nextPage(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeIn,
-                );
-              }),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: 300,
-            height: 50,
-            child: TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text('¿Ya tienes una cuenta? Inicia sesión'),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
