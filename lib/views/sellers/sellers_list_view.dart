@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 
 class SellersListView extends StatelessWidget {
   @override

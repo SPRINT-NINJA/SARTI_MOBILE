@@ -10,12 +10,12 @@ class ButtonFill extends StatelessWidget {
 
   final ThemeData theme;
   final String textButton;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 300,
+      width: double.infinity,
       height: 50,
       child: FilledButton(
         style: ButtonStyle(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sarti_mobile/config/constant/enums.dart';
 import 'package:sarti_mobile/views/auth/widgets/create_account_business_form_widget.dart';
 import 'package:sarti_mobile/views/auth/widgets/create_account_costumer_form_widget.dart';
-import 'package:sarti_mobile/views/auth/widgets/create_account_delivery_form_widget.dart';
 
 class CreateAccountView extends StatelessWidget {
   static const name = 'create_account';
@@ -42,9 +41,7 @@ class _CreateAccountViewState extends State<_CreateAccountView> {
     return SafeArea(
       child: Builder(
         builder: (BuildContext context) {
-          if (widget.role == ERoles.delivery.toString()) {
-            return CreateAccountDeliveryFormWidget(theme: widget.theme);
-          } else if (widget.role == ERoles.business.toString()) {
+          if (widget.role == ERoles.business.toString()) {
             return CreateAccountBusinessFormWidget(theme: widget.theme);
           } else {
             return CreateAccountCostumerFormWidget(theme: widget.theme);

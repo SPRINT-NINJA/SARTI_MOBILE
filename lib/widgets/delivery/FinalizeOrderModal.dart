@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/widgets/delivery/OrderCompletedSuccessfullyModal.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 
 class FinalizeOrderModal extends StatelessWidget{
   @override

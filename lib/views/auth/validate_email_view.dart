@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/views/auth/login_screen.dart';
 import 'package:sarti_mobile/views/auth/recovery_password_view.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 
 class ValidateEmailView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();

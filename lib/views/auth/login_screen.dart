@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'email_login_screen.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatelessWidget {

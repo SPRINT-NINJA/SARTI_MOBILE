@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 import 'package:sarti_mobile/views/auth/product_details_screen.dart';
 
 class ProductListScreen extends StatelessWidget {
