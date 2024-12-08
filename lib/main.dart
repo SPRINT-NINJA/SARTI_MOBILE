@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/config/app_theme.dart';
-import 'package:sarti_mobile/views/auth/product_details_screen.dart';
-import 'package:sarti_mobile/views/auth/login_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sarti_mobile/config/theme/app_theme.dart';
+import 'package:sarti_mobile/config/router/app_router.dart';
 
-void main() {
+Future<void> main() async {
+
+  await dotenv.load(fileName: ".env");
+
+
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -11,11 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       theme: AppTheme(selectedColor: 0).theme(),
-      home:  LoginScreen(
-      ),
     );
   }
 }

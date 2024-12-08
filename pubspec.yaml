@@ -40,6 +40,11 @@ dependencies:
   shared_preferences: ^2.3.2
   form_field_validator: ^1.1.0
   dart_jsonwebtoken: ^2.14.1
+  go_router: ^14.6.1
+  animate_do: ^3.3.4
+  flutter_dotenv: ^5.2.1
+  dio: ^5.7.0
+
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +76,8 @@ flutter:
     - assets/delivery/successful_delivery.png
     - assets/images/logo_sarti_leading.png
     - assets/images/logo_sarti_leading_fill.png
+    - assets/images/tutorial/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

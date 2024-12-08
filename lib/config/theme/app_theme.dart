@@ -43,12 +43,30 @@ class AppTheme {
       primarySwatch: createMaterialColor(_colorsTheme[selectedColor]),
       primaryColor: _colorsTheme[selectedColor],
       appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: _primaryColor,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 25,
           fontWeight: FontWeight.bold,
         ),
+        actionsIconTheme: IconThemeData(
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      scaffoldBackgroundColor: Colors.white,
+      filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all<Color>(_primaryColor),
+        )
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all<Color>(_primaryColor),
+        )
       ),
     );
   }
