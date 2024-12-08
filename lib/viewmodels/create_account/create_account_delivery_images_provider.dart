@@ -18,17 +18,104 @@ class CreateAccountDeliveryImageNotifier
 
   onImageRearIDChanged(String value) {
     final imageRearID = ImageId.dirty(value);
-    state = state.copyWith(imageRearID: imageRearID);
+
+    final updatedImageList = _updateImageList(rearImage: value);
+
+    state = state.copyWith(imageRearID: imageRearID
+      , imageList: updatedImageList,
+      isValidImageID: Formz.validate([imageRearID, state.imageFrontID])
+    );
   }
 
   onImageFrontIDChanged(String value) {
     final imageFrontID = ImageId.dirty(value);
-    state = state.copyWith(imageFrontID: imageFrontID);
+
+    final updatedImageList = _updateImageList(frontImage: value);
+
+
+    state = state.copyWith(imageFrontID: imageFrontID,
+      imageList: updatedImageList,
+      isValidImageID: Formz.validate([state.imageRearID, imageFrontID])
+    );
+
+  }
+
+  onImageOfFaceChanged(String value) {
+    final imageOfFace = ImageId.dirty(value);
+
+    final updatedImageList = _updateImageList(faceImage: value);
+
+    state = state.copyWith(imageOfFace: imageOfFace, imageList: updatedImageList, isValidImageID: Formz.validate([state.imageRearID, imageOfFace]));
   }
 
   onIsValidImageIDChanged(bool value) {
     state = state.copyWith(isValidImageID: value);
   }
+
+  // List<String> _updateImageList({String? frontImage, String? rearImage, String? faceImage}) {
+  //   // Crear una copia de la lista actual.
+  //   final List<String> updatedList = List<String>.from(state.imageList);
+  //
+  //   //front [0] rear [1] face [2]
+  //   final hasFrontImage = updatedList.isNotEmpty;
+  //   final hasRearImage = updatedList.length > 1;
+  //   final hasFaceImage = updatedList.length > 2;
+  //
+  //
+  //   if (frontImage == null && rearImage == null && frontImage == null) return updatedList;
+  //
+  //   if (frontImage != null){
+  //     if (hasFrontImage) {
+  //       updatedList[0] = frontImage;
+  //     } else {
+  //       updatedList.add(frontImage);
+  //     }
+  //   }else if (rearImage != null){
+  //     if (hasRearImage) {
+  //       updatedList[1] = rearImage;
+  //     } else {
+  //       updatedList.add(rearImage);
+  //     }
+  //   }else if (faceImage != null){
+  //     if (hasFaceImage) {
+  //       updatedList[2] = faceImage;
+  //     } else {
+  //       updatedList.add(faceImage);
+  //     }
+  //   }
+  //   return updatedList;
+  // }
+
+
+  List<String> _updateImageList({
+    String? frontImage,
+    String? rearImage,
+    String? faceImage,
+  }) {
+    final List<String> updatedList = List<String>.from(state.imageList);
+
+
+    final hasFrontImage = updatedList.isNotEmpty;
+    final hasRearImage = updatedList.length > 1;
+    final hasFaceImage = updatedList.length > 2;
+
+    if (frontImage == null && rearImage == null && faceImage == null) return updatedList;
+
+    if (frontImage != null) {
+      if (!hasFrontImage) updatedList.add(frontImage);
+    }else if (rearImage != null) {
+      if (!hasRearImage) updatedList.add(rearImage);
+    }else if (faceImage != null) {
+      if (!hasFaceImage) updatedList.add(faceImage);
+    }
+
+    if (frontImage != null) updatedList[0] = frontImage;
+    if (rearImage != null) updatedList[1] = rearImage;
+    if (faceImage != null) updatedList[2] = faceImage;
+
+    return updatedList;
+  }
+
 
 
   onValidateID() {
@@ -74,23 +161,31 @@ class CreateAccountDeliveryImageNotifier
 class CreateAccountDeliveryImageState {
   final ImageId imageRearID;
   final ImageId imageFrontID;
+  final ImageId imageOfFace;
   final bool isValidImageID;
+  final List<String> imageList;
 
   const CreateAccountDeliveryImageState( {
     this.isValidImageID = false,
     this.imageRearID = const ImageId.pure(),
     this.imageFrontID = const ImageId.pure(),
+    this.imageOfFace = const ImageId.pure(),
+    this.imageList = const [],
   });
 
   CreateAccountDeliveryImageState copyWith({
     ImageId? imageRearID,
     ImageId? imageFrontID,
+    ImageId? imageOfFace,
     bool? isValidImageID,
+    List<String>? imageList,
   }) {
     return CreateAccountDeliveryImageState(
+      imageOfFace: imageOfFace ?? this.imageOfFace,
       imageRearID: imageRearID ?? this.imageRearID,
       imageFrontID: imageFrontID ?? this.imageFrontID,
       isValidImageID: isValidImageID ?? this.isValidImageID,
+      imageList: imageList ?? this.imageList,
     );
   }
 
@@ -100,6 +195,8 @@ class CreateAccountDeliveryImageState {
       imageRearID: $imageRearID,
       imageFrontID: $imageFrontID,
       isValidImageID: $isValidImageID,
+      imageList: $imageList,
+      imageOfFace: $imageOfFace,
     )''';
   }
 }

@@ -24,8 +24,12 @@ class CreateAccountDeliveryView extends ConsumerWidget {
     final ThemeData theme = Theme.of(context);
 
     final currentStep = ref.watch(createAccountDeliveryProvider).currentStep;
-    final createAccountDeliveryProviderNotifier =
-        ref.read(createAccountDeliveryProvider.notifier);
+    final createAccountDeliveryProviderNotifier = ref.read(createAccountDeliveryProvider.notifier);
+
+
+    //section credentials
+    final images = ref.watch(createAccountDeliveryImagesProvider).imageList;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -40,10 +44,19 @@ class CreateAccountDeliveryView extends ConsumerWidget {
           _SectionPersonalData(
               theme: theme, onNext: () => nextStep(controller)),
           _SectionCredentialsUser(
-              theme: theme, onNext: () => nextStep(controller), onPrevious: () => previousStep(controller)),
+              theme: theme,
+              onNext: () => nextStep(controller),
+              onPrevious: () => previousStep(controller)),
+          _SectionUploadCredentialPhotos(
+              theme: theme,
+              onNext: () => nextStep(controller),
+              onPrevious: () => previousStep(controller),
+              images: images
+          ),
         ],
       ),
-      bottomNavigationBar: buildBottomNavigationBar(ref, controller, currentStep),
+      bottomNavigationBar:
+          buildBottomNavigationBar(ref, controller, currentStep),
     );
   }
 
@@ -63,6 +76,8 @@ class CreateAccountDeliveryView extends ConsumerWidget {
             icon: Icon(Icons.person), label: "Información personal"),
         BottomNavigationBarItem(
             icon: Icon(Icons.card_travel_rounded), label: "Credenciales"),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt), label: "Identificación"),
       ],
     );
   }
@@ -192,7 +207,8 @@ class _SectionPersonalData extends ConsumerWidget {
 }
 
 class _SectionCredentialsUser extends ConsumerWidget {
-  const _SectionCredentialsUser({required this.theme, required this.onNext, required this.onPrevious});
+  const _SectionCredentialsUser(
+      {required this.theme, required this.onNext, required this.onPrevious});
 
   final ThemeData theme;
   final VoidCallback onNext;
@@ -267,7 +283,8 @@ class _SectionCredentialsUser extends ConsumerWidget {
                       onPressed: () {
                         createAccountDeliveryProviderNotifier.onSubmitted();
                         if (!createAccountDeliveryProviderData.isValid) return;
-                        createAccountDeliveryProviderNotifier.onIsFormPostedChanged(false);
+                        createAccountDeliveryProviderNotifier
+                            .onIsFormPostedChanged(false);
                         onNext();
                       }),
                   const SizedBox(height: 20),
@@ -288,6 +305,127 @@ class _SectionCredentialsUser extends ConsumerWidget {
             const SizedBox(height: 20),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SectionUploadCredentialPhotos extends ConsumerWidget {
+  _SectionUploadCredentialPhotos({
+    required this.theme,
+    required this.onNext,
+    required this.onPrevious,
+    this.images = const [],
+  });
+
+  final ThemeData theme;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
+  final List<String> images;
+
+  String? frontPhotoPath;
+  String? backPhotoPath;
+
+  Future<void> pickPhoto(
+      {required WidgetRef ref, required bool isFront}) async {
+    final path = await CameraGalleryServiceImpl().pickImage();
+
+    if (path != null) {
+      if (isFront) {
+        ref
+            .read(createAccountDeliveryImagesProvider.notifier)
+            .onImageFrontIDChanged(path);
+      } else {
+        ref
+            .read(createAccountDeliveryImagesProvider.notifier)
+            .onImageRearIDChanged(path);
+      }
+    }
+  }
+
+  Future<void> pickSelfiePhoto({required WidgetRef ref}) async {
+    final path = await CameraGalleryServiceImpl().takeSelfie();
+
+    if (path != null) {
+      ref
+          .read(createAccountDeliveryImagesProvider.notifier)
+          .onImageOfFaceChanged(path);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+      child: Column(
+        children: [
+          Icon(
+            Icons.camera_alt,
+            color: theme.primaryColor,
+            size: 100,
+          ),
+          RichText(
+              text: const TextSpan(children: [
+            TextSpan(
+              text: 'Ingresa tus documentos de identificación oficial ',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: '(INE, pasaporte, licencia)',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ])),
+          const SizedBox(height: 30),
+          SizedBox(
+              height: 200,
+              width: double.infinity,
+              child: _ImageGallery(
+                images: images,
+              )),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+                onPressed: () async {
+                  pickPhoto(ref: ref, isFront: true);
+                },
+                icon: const Icon(Icons.camera_front),
+                label: const Text('Tomar foto frontal')),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+                onPressed: () async {
+                  pickPhoto(ref: ref, isFront: false);
+                },
+                icon: const Icon(Icons.camera_rear),
+                label: const Text('Tomar foto trasera')),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+                onPressed: () async => pickSelfiePhoto(ref: ref),
+                icon: const Icon(Icons.person),
+                label: const Text('Foto de rostro')),
+          ),
+          const SizedBox(height: 40),
+          SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: ButtonFill(
+                onPressed: () {
+                  ref.watch(createAccountDeliveryImagesProvider.notifier).onSubmitted();
+                }, theme: theme, textButton: 'Continuar',
+              )),
+        ],
       ),
     );
   }
@@ -339,12 +477,7 @@ class _SectionIdentification extends ConsumerWidget {
           ),
           textAlign: TextAlign.start,
         ),
-        SizedBox(
-            height: 250,
-            width: 600,
-            child: _ImageGallery(
-              image: providerImage.imageFrontID.value ?? '',
-            )),
+
         const SizedBox(height: 20),
         SizedBox(
           width: double.infinity,
@@ -427,15 +560,14 @@ class _SectionIdentification extends ConsumerWidget {
 }
 
 class _ImageGallery extends StatelessWidget {
-  const _ImageGallery({
-    this.image = '',
-  });
+  const _ImageGallery({required this.images, this.initialPage = 0});
 
-  final String image;
+  final List<String> images;
+  final int initialPage;
 
   @override
   Widget build(BuildContext context) {
-    if (image.isEmpty) {
+    if (images.isEmpty) {
       return ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: Image.network(
@@ -444,19 +576,27 @@ class _ImageGallery extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        child: FadeInImage(
-            fit: BoxFit.cover,
-            image: FileImage(File(image)),
-            placeholder: const NetworkImage(
-              'https://media.tenor.com/pEDQL3XJxdsAAAAi/cat-cute.gif',
-              scale: 0.5,
-            )),
-      ),
-    );
+    return PageView(
+        scrollDirection: Axis.horizontal,
+        controller: PageController(
+          viewportFraction: 0.8,
+          initialPage: initialPage,
+        ),
+        children: images.map((image) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: FadeInImage(
+                  fit: BoxFit.cover,
+                  image: FileImage(File(image)),
+                  placeholder: const NetworkImage(
+                    'https://media.tenor.com/pEDQL3XJxdsAAAAi/cat-cute.gif',
+                    scale: 0.5,
+                  )),
+            ),
+          );
+        }).toList());
   }
 }
 
