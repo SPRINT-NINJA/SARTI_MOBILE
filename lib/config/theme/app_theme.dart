@@ -76,6 +76,9 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+          ),
           foregroundColor: WidgetStateProperty.all<Color>(
             _colorsTheme[selectedColor],
           ),

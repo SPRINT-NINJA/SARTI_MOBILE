@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sarti_mobile/views/auth/email_login_screen.dart'; // Asegúrate de que la ruta sea correcta
-import 'package:sarti_mobile/utils/colors.dart'; // Para el color de la app (si lo usas)
+import 'package:sarti_mobile/config/theme/colors.dart'; // Para el color de la app (si lo usas)
 
 class ProductDetailScreen extends StatelessWidget {
   final String title;

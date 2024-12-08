@@ -10,7 +10,7 @@ class ButtonFill extends StatelessWidget {
 
   final ThemeData theme;
   final String textButton;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

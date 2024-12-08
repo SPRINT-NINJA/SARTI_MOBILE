@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/config/constant/enums.dart';
 import 'package:sarti_mobile/config/constant/environment.dart';
+import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
 import 'package:sarti_mobile/views/screens.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
 
@@ -104,7 +105,7 @@ class _CreateAccountButton extends StatelessWidget {
                           children: [
                             const SizedBox(height: 34),
                             ButtonFillIcon(theme: theme, textButton: 'Repartidor', onPressed: () {
-                              context.push('/create-account/${ERoles.delivery}');
+                            context.pushNamed(CreateAccountDeliveryView.name);
                               // close the modal
                               context.pop();
                             }, icon: Icons.delivery_dining),

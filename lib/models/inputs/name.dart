@@ -6,7 +6,7 @@ enum NameError { empty , minLength, maxLength, format }
 // Extend FormzInput and provide the input type and error type.
 class Name extends FormzInput<String, NameError> {
 
-  static final regex = RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$');
+  static final nameRegExp = RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$');
   // Call super.pure to represent an unmodified form input.
   const Name.pure() : super.pure('');
 
@@ -26,7 +26,7 @@ class Name extends FormzInput<String, NameError> {
   @override
   NameError? validator(String value) {
     if (value.isEmpty || value.trim().isEmpty) return NameError.empty;
-    if (!regex.hasMatch(value)) return NameError.format;
+    if (!nameRegExp.hasMatch(value)) return NameError.format;
     if (value.length < 4) return NameError.minLength;
     if (value.length > 45) return NameError.maxLength;
 
