@@ -276,6 +276,7 @@ class _SectionCredentialsUser extends ConsumerWidget {
                       textButton: 'Continuar',
                       onPressed: () {
                         notifier.onSubmittedCredentials();
+                        print('isFormCrednetialValid: ${state.isFormCredentialsValid}');
                         if (!state.isFormCredentialsValid) return;
                         onNext();
                       }),
@@ -303,11 +304,13 @@ class _SectionCredentialsUser extends ConsumerWidget {
 }
 
 class _SectionUploadCredentialPhotos extends ConsumerWidget {
-  _SectionUploadCredentialPhotos({
+  const _SectionUploadCredentialPhotos({
     required this.theme,
     required this.onNext,
     required this.onPrevious,
-    this.images = const [],
+    required this.images,
+    this.frontPhotoPath,
+    this.backPhotoPath,
   });
 
   final ThemeData theme;
@@ -315,8 +318,8 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
   final VoidCallback onPrevious;
   final List<String> images;
 
-  String? frontPhotoPath;
-  String? backPhotoPath;
+  final String? frontPhotoPath;
+  final String? backPhotoPath;
 
   Future<void> pickPhoto(
       {required WidgetRef ref, required bool isFront}) async {
@@ -428,7 +431,7 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
                             .imageRearID
                             .errMsg ??
                         '',
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ))
                 : const SizedBox(),
 
@@ -454,10 +457,9 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
 }
 
 class _ImageGallery extends StatelessWidget {
-  const _ImageGallery({required this.images, this.initialPage = 0});
+  const _ImageGallery({required this.images});
 
   final List<String> images;
-  final int initialPage;
 
   @override
   Widget build(BuildContext context) {
@@ -474,7 +476,6 @@ class _ImageGallery extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         controller: PageController(
           viewportFraction: 0.8,
-          initialPage: initialPage,
         ),
         children: images.map((image) {
           return Padding(

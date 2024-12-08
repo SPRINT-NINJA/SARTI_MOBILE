@@ -6,7 +6,8 @@ enum FormStatus { invalid, valid, validating, submitting, submitted, posting }
 
 ///state provider
 final createAccountDeliveryProvider = StateNotifierProvider.autoDispose<
-    CreateAccountDeliveryNotifier, CreateAccountDeliveryState>((ref) {
+    CreateAccountDeliveryNotifier,
+    CreateAccountDeliveryState>((ref) {
   return CreateAccountDeliveryNotifier();
 });
 
@@ -20,7 +21,11 @@ class CreateAccountDeliveryNotifier
     final name = Name.dirty(value);
     state = state.copyWith(
       name: name,
-      isFormPersonalValid: _validateFormPersonal(state),
+      isFormPersonalValid: Formz.validate([
+        name,
+        state.surname,
+        state.lastName,
+      ]),
     );
   }
 
@@ -28,7 +33,11 @@ class CreateAccountDeliveryNotifier
     final surname = Name.dirty(value);
     state = state.copyWith(
       surname: surname,
-      isFormPersonalValid: _validateFormPersonal(state),
+      isFormPersonalValid: Formz.validate([
+        surname,
+        state.name,
+        state.lastName,
+      ]),
     );
   }
 
@@ -36,7 +45,11 @@ class CreateAccountDeliveryNotifier
     final lastName = Lastname.dirty(value);
     state = state.copyWith(
       lastName: lastName,
-      isFormPersonalValid: _validateFormPersonal(state),
+      isFormPersonalValid: Formz.validate([
+        lastName,
+        state.name,
+        state.surname,
+      ]),
     );
   }
 
@@ -46,59 +59,64 @@ class CreateAccountDeliveryNotifier
     final name = Name.dirty(state.name.value);
     final surname = Name.dirty(state.surname.value);
     final lastName = Lastname.dirty(state.lastName.value);
+    final isFormPersonalValid = Formz.validate([
+      name,
+      surname,
+      lastName,
+    ]);
 
     state = state.copyWith(
       name: name,
       surname: surname,
       lastName: lastName,
       isFormPersonalPosted: true,
-      isFormPersonalValid: _validateFormPersonal(state),
+      isFormPersonalValid: isFormPersonalValid,
     );
 
     // validate form
-    if (!_validateFormPersonal(state)) return;
-    print('Submitted Personal${
-        'name: ${state.name.value},'
+    if (!isFormPersonalValid) return;
+    print('Submitted Personal${'name: ${state.name.value},'
         ' surname: ${state.surname.value},'
         ' lastName: ${state.lastName.value}'}');
   }
 
-  bool _validateFormPersonal(CreateAccountDeliveryState state) {
-    return Formz.validate([
-      state.name,
-      state.surname,
-      state.lastName,
-    ]);
-  }
 
   // section credentials
   onEmailChanged(String value) {
     final email = Email.dirty(value);
     state = state.copyWith(
       email: email,
-      isFormCredentialsValid: _validateForm(state),
+      isFormCredentialsValid: Formz.validate([
+        email,
+        state.password,
+        state.confirmPassword,
+      ]),
     );
   }
 
   onPasswordChanged(String value) {
     final password = Password.dirty(value);
     state = state.copyWith(
-      password: password,
-      isFormCredentialsValid: _validateForm(state),
+        password: password,
+        isFormCredentialsValid: Formz.validate([
+          state.email,
+          password,
+          state.confirmPassword,
+        ])
     );
   }
 
   onConfirmPasswordChanged(String value) {
     final confirmPassword =
-        ConfirmPassword.dirty(password: state.password.value, value: value);
+    ConfirmPassword.dirty(password: state.password.value, value: value);
     state = state.copyWith(
-      confirmPassword: confirmPassword,
-      isFormCredentialsValid: _validateForm(state),
+        confirmPassword: confirmPassword,
+        isFormCredentialsValid: Formz.validate([
+          state.email,
+          state.password,
+          confirmPassword,
+        ])
     );
-  }
-
-  onIsFormCredentialsPostedChanged(bool value) {
-    state = state.copyWith(isFormCredentialsPosted: value);
   }
 
   onSubmittedCredentials() {
@@ -106,31 +124,32 @@ class CreateAccountDeliveryNotifier
     final email = Email.dirty(state.email.value);
     final password = Password.dirty(state.password.value);
     final confirmPassword = ConfirmPassword.dirty(
-      password: state.confirmPassword.value,
+      password: state.password.value,
       value: state.confirmPassword.value,
     );
+    final isFormCredentialsValid = Formz.validate([
+      state.email,
+      state.password,
+      state.confirmPassword,
+    ]);
 
     state = state.copyWith(
       email: email,
       password: password,
       confirmPassword: confirmPassword,
-      isFormCredentialsValid: _validateFormCredentials(state),
+      isFormCredentialsValid: isFormCredentialsValid,
       isFormCredentialsPosted: true,
     );
 
     // validate form
-    if (!state.isFormCredentialsValid) return;
-    print('Submitted credentils$state');
+    if (!isFormCredentialsValid) return;
+    print(
+      'Submitted credentials${'email: ${state.email.value},'
+          ' password: ${state.password.value},'
+          ' confirmPassword: ${state.confirmPassword.value}'}',
+    );
   }
 
-  bool _validateFormCredentials(CreateAccountDeliveryState state) {
-    return Formz.validate([
-          state.email,
-          state.password,
-          state.confirmPassword,
-        ]) &&
-        state.password.value == state.confirmPassword.value;
-  }
 
   // control state
   onIsFormPostedChanged(bool value) {
@@ -192,13 +211,13 @@ class CreateAccountDeliveryNotifier
 
   bool _validateForm(CreateAccountDeliveryState state) {
     return Formz.validate([
-          state.name,
-          state.surname,
-          state.lastName,
-          state.email,
-          state.password,
-          state.confirmPassword,
-        ]) &&
+      state.name,
+      state.surname,
+      state.lastName,
+      state.email,
+      state.password,
+      state.confirmPassword,
+    ]) &&
         state.password.value == state.confirmPassword.value;
   }
 }
@@ -219,7 +238,7 @@ class CreateAccountDeliveryState {
   final Lastname lastName;
 
   // section credentials
-  final bool isFormCredentialsValid; //validate submmit
+  final bool isFormCredentialsValid; //validate submit
   final bool isFormCredentialsPosted; // validate errors
 
   final Email email;
@@ -281,9 +300,9 @@ class CreateAccountDeliveryState {
       lastName: lastName ?? this.lastName,
       //
       isFormCredentialsValid:
-          isFormCredentialsValid ?? this.isFormCredentialsValid,
+      isFormCredentialsValid ?? this.isFormCredentialsValid,
       isFormCredentialsPosted:
-          isFormCredentialsPosted ?? this.isFormCredentialsPosted,
+      isFormCredentialsPosted ?? this.isFormCredentialsPosted,
       email: email ?? this.email,
       password: password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
