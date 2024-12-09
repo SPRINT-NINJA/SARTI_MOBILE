@@ -9,33 +9,47 @@ import 'package:sarti_mobile/viewmodels/create_account/states/create_account_use
 
 ///state provider
 final createAccountDeliveryProvider = StateNotifierProvider.autoDispose<CreateAccountDeliveryNotifier, CreateAccountUserDeliveryState>((ref) {
-  final deliveryService = ref.watch(userDeliveryServiceProvider);
+  final deliveryService = ref.watch(userDeliveryServiceProvider).createUserDelivery;
   return CreateAccountDeliveryNotifier(deliveryService);
 });
 
 // implementation of notifier
 class CreateAccountDeliveryNotifier extends StateNotifier<CreateAccountUserDeliveryState> {
 
-  final UserDeliveryService deliveryService;
+  final Future<String> Function(Map<String, dynamic> userDeliveryLike)? onSubmitCallback;
 
-  CreateAccountDeliveryNotifier(this.deliveryService) : super(const CreateAccountUserDeliveryState());
+  CreateAccountDeliveryNotifier(this.onSubmitCallback) : super(const CreateAccountUserDeliveryState());
 
-  Future createUserDelivery(UserDelivery user) async {
-    if (state.isLoading || !state.isValid) return;
+  Future<String> createUserDelivery(UserDelivery user) async {
+    if (state.isLoading) return 'Loading';
+    if (onSubmitCallback == null) return 'Error';
 
     state = state.copyWith(isLoading: true);
 
-    final userDelivery = await deliveryService.createUserDelivery({
-      'name': user.name,
-      'surname': user.surname,
-      'lastName': user.firstLastName,
-      'email': user.email,
-      'password': user.password,
-    });
+    final userDeliveryLike = {
+      "email": user.email,
+      "password": user.password,
+      "name": user.name,
+      "firstLastName": user.firstLastName,
+      "secondLastName": user.secondLastName,
+      "profilePicture": user.profilePicture,
+      "frontIdentification": user.frontIdentification,
+      "backIdentification": user.backIdentification,
+    };
 
-    state = state.copyWith(isLoading: false, formStatus: FormStatus.submitted);
+    try{
+      final userDelivery = await onSubmitCallback!(userDeliveryLike);
+      state = state.copyWith(isLoading: false, formStatus: FormStatus.submitted);
 
-    print('UserDelivery: $userDelivery');
+      print('UserDelivery: $userDelivery');
+      return userDelivery;
+    }catch(e){
+      return 'Error';
+    }finally{
+      state = state.copyWith(isLoading: false);
+    }
+
+
   }
 
   // section personal

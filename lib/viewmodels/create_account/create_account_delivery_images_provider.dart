@@ -20,9 +20,14 @@ class CreateAccountDeliveryImageNotifier
     final updatedImageList = _updateImageList(rearImage: value);
 
     state = state.copyWith(
-        imageRearID: imageRearID,
-        imageList: updatedImageList,
-        isValid: _validateForm(state));
+      imageRearID: imageRearID,
+      imageList: updatedImageList,
+      isValid: Formz.validate([
+        state.imageFrontID,
+        imageRearID,
+        state.imageOfFace,
+      ]),
+    );
   }
 
   onImageFrontIDChanged(String value) {
@@ -31,9 +36,14 @@ class CreateAccountDeliveryImageNotifier
     final updatedImageList = _updateImageList(frontImage: value);
 
     state = state.copyWith(
-        imageFrontID: imageFrontID,
-        imageList: updatedImageList,
-        isValid: _validateForm(state));
+      imageFrontID: imageFrontID,
+      imageList: updatedImageList,
+      isValid: Formz.validate([
+        imageFrontID,
+        state.imageRearID,
+        state.imageOfFace,
+      ]),
+    );
   }
 
   onImageOfFaceChanged(String value) {
@@ -44,7 +54,12 @@ class CreateAccountDeliveryImageNotifier
     state = state.copyWith(
         imageOfFace: imageOfFace,
         imageList: updatedImageList,
-        isValid: _validateForm(state));
+        isValid: Formz.validate([
+          state.imageFrontID,
+          state.imageRearID,
+          imageOfFace,
+        ]),
+    );
   }
 
   onIsValidImageIDChanged(bool value) {
@@ -57,7 +72,12 @@ class CreateAccountDeliveryImageNotifier
 
   onSubmitted() {
     _touchEveryField();
-    if (!_validateForm(state)) return;
+    final isValid = Formz.validate([
+      state.imageFrontID,
+      state.imageRearID,
+      state.imageOfFace,
+    ]);
+    if (!isValid) return;
 
     print('Submitted $state');
   }
@@ -66,7 +86,11 @@ class CreateAccountDeliveryImageNotifier
     final imageRearID = ImageId.dirty(state.imageRearID.value);
     final imageFrontID = ImageId.dirty(state.imageFrontID.value);
     final imageOfFace = ImageId.dirty(state.imageOfFace.value);
-    final isValid = _validateForm(state);
+    final isValid = Formz.validate([
+      imageFrontID,
+      imageRearID,
+      imageOfFace,
+    ]);
 
     state = state.copyWith(
       imageRearID: imageRearID,
@@ -77,13 +101,6 @@ class CreateAccountDeliveryImageNotifier
     );
   }
 
-  bool _validateForm(CreateAccountDeliveryImageState state) {
-    return Formz.validate([
-      state.imageFrontID,
-      state.imageRearID,
-      state.imageOfFace,
-    ]);
-  }
 
   List<String> _updateImageList({
     String? frontImage,
@@ -96,8 +113,9 @@ class CreateAccountDeliveryImageNotifier
     final hasRearImage = updatedList.length > 1;
     final hasFaceImage = updatedList.length > 2;
 
-    if (frontImage == null && rearImage == null && faceImage == null)
+    if (frontImage == null && rearImage == null && faceImage == null) {
       return updatedList;
+    }
 
     if (frontImage != null) {
       if (!hasFrontImage) updatedList.add(frontImage);

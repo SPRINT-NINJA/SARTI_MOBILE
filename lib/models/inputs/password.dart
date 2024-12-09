@@ -7,7 +7,7 @@ enum PasswordError { empty , format }
 class Password extends FormzInput<String, PasswordError> {
 
   static final RegExp passwordRegExp = RegExp(
-    r'^(?=.*[A-Z]+)(?=.*[._#]+)(?=.*[0-9]+)[a-zA-Z0-9._#]{3,}$',
+    r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$',
   );
 
   // Call super.pure to represent an unmodified form input.
@@ -19,7 +19,7 @@ class Password extends FormzInput<String, PasswordError> {
   String? get errMsg{
     if (isValid || isPure) return null;
     if (displayError == PasswordError.empty) return 'El campo no puede estar vacío';
-    if (displayError == PasswordError.format) return 'La contraseña debe tener al menos 3 caracteres, un número, una letra mayúscula y un caracter especial';
+    if (displayError == PasswordError.format) return 'La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula y un número';
     return null;
   }
 

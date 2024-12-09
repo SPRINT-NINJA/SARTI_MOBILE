@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/models/models.dart';
 import 'package:sarti_mobile/services/camera/camera_gallery_service_impl.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 import 'package:sarti_mobile/widgets/auth/custom_text_form_field.dart';
 import 'package:sarti_mobile/widgets/auth/password_text_form_field.dart';
+import 'package:sarti_mobile/widgets/full_screen_loader.dart';
 
 import '../../../viewmodels/create_account/create_account_delivery_images_provider.dart';
 import '../../../viewmodels/create_account/create_account_delivery_provider.dart';
@@ -37,30 +39,30 @@ class CreateAccountDeliveryView extends ConsumerWidget {
         title: const Text('Crea tu cuenta de repartidor'),
       ),
       body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: controller,
-        onPageChanged: notifierCreateAccountDelivery.onCurrentStepChanged,
-        children: [
-          _SectionPersonalData(
-            theme: theme,
-            onNext: () => nextStep(controller),
-            notifier: notifierCreateAccountDelivery,
-            state: stateCreateAccountDeliver,
-          ),
-          _SectionCredentialsUser(
-            theme: theme,
-            onNext: () => nextStep(controller),
-            onPrevious: () => previousStep(controller),
-            notifier: notifierCreateAccountDelivery,
-            state: stateCreateAccountDeliver,
-          ),
-          _SectionUploadCredentialPhotos(
-              theme: theme,
-              onNext: () => nextStep(controller),
-              onPrevious: () => previousStep(controller),
-              images: images),
-        ],
-      ),
+              physics: const NeverScrollableScrollPhysics(),
+              controller: controller,
+              onPageChanged: notifierCreateAccountDelivery.onCurrentStepChanged,
+              children: [
+                _SectionPersonalData(
+                  theme: theme,
+                  onNext: () => nextStep(controller),
+                  notifier: notifierCreateAccountDelivery,
+                  state: stateCreateAccountDeliver,
+                ),
+                _SectionCredentialsUser(
+                  theme: theme,
+                  onNext: () => nextStep(controller),
+                  onPrevious: () => previousStep(controller),
+                  notifier: notifierCreateAccountDelivery,
+                  state: stateCreateAccountDeliver,
+                ),
+                _SectionUploadCredentialPhotos(
+                    theme: theme,
+                    onNext: () => nextStep(controller),
+                    onPrevious: () => previousStep(controller),
+                    images: images),
+              ],
+            ),
     );
   }
 
@@ -115,7 +117,6 @@ class _SectionPersonalData extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -179,7 +180,8 @@ class _SectionPersonalData extends ConsumerWidget {
                       textButton: 'Continuar',
                       onPressed: () {
                         notifier.onSubmittedInformationPersonal();
-                        print('isFormPersonalValid: ${state.isFormPersonalValid}');
+                        print(
+                            'isFormPersonalValid: ${state.isFormPersonalValid}');
                         if (!state.isFormPersonalValid) return;
                         onNext();
                       }),
@@ -277,7 +279,8 @@ class _SectionCredentialsUser extends ConsumerWidget {
                       textButton: 'Continuar',
                       onPressed: () {
                         notifier.onSubmittedCredentials();
-                        print('isFormCrednetialValid: ${state.isFormCredentialsValid}');
+                        print(
+                            'isFormCrednetialValid: ${state.isFormCredentialsValid}');
                         if (!state.isFormCredentialsValid) return;
                         onNext();
                       }),
@@ -322,36 +325,64 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
   final String? frontPhotoPath;
   final String? backPhotoPath;
 
-  Future<void> pickPhoto(
-      {required WidgetRef ref, required bool isFront}) async {
-    final path = await CameraGalleryServiceImpl().pickImage();
-
-    if (path != null) {
-      if (isFront) {
-        ref
-            .read(createAccountDeliveryImagesProvider.notifier)
-            .onImageFrontIDChanged(path);
-      } else {
-        ref
-            .read(createAccountDeliveryImagesProvider.notifier)
-            .onImageRearIDChanged(path);
-      }
-    }
-  }
-
-  Future<void> pickSelfiePhoto({required WidgetRef ref}) async {
-    final path = await CameraGalleryServiceImpl().takeSelfie();
-
-    if (path != null) {
-      ref
-          .read(createAccountDeliveryImagesProvider.notifier)
-          .onImageOfFaceChanged(path);
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
+    final state = ref.watch(createAccountDeliveryProvider);
+    final notifier = ref.read(createAccountDeliveryProvider.notifier);
+
+    Future<void> handleImageSelection(
+        BuildContext context, Future<String?> Function() imagePicker, Function(String) onImageChanged) async {
+      final path = await imagePicker();
+      if (path != null) {
+        onImageChanged(path);
+      }
+    }
+
+    Future<void> registerAccount(BuildContext context, WidgetRef ref) async {
+      final createAccountDeliveryImages = ref.watch(createAccountDeliveryImagesProvider);
+
+      ref.watch(createAccountDeliveryImagesProvider.notifier).onSubmitted();
+
+      if (!createAccountDeliveryImages.isValid) return;
+
+      final UserDelivery user = UserDelivery(
+        email: state.email.value,
+        password: state.password.value,
+        name: state.name.value,
+        firstLastName: state.surname.value,
+        secondLastName: state.lastName.value,
+        profilePicture: createAccountDeliveryImages.imageOfFace.value,
+        frontIdentification: createAccountDeliveryImages.imageFrontID.value,
+        backIdentification: createAccountDeliveryImages.imageRearID.value,
+      );
+
+      final result = await notifier.createUserDelivery(user);
+      if (result != 'Error') {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Registro exitoso'),
+                content: const Text('Tu cuenta ha sido registrada con éxito'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.go('/');
+                    },
+                    child: const Text('Aceptar'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    }
+
+
+    return state.isLoading
+        ? const FullScreenLoader() : SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: Column(
@@ -363,21 +394,21 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
             ),
             RichText(
                 text: const TextSpan(children: [
-              TextSpan(
-                text: 'Ingresa tus documentos de identificación oficial ',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextSpan(
-                text: '(INE, pasaporte, licencia)',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-            ])),
+                  TextSpan(
+                    text: 'Ingresa tus documentos de identificación oficial ',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '(INE, pasaporte, licencia)',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ])),
             const SizedBox(height: 30),
             SizedBox(
                 height: 200,
@@ -389,9 +420,10 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                  onPressed: () async {
-                    pickPhoto(ref: ref, isFront: true);
-                  },
+                  onPressed: () =>
+                      handleImageSelection(context, CameraGalleryServiceImpl().pickImage, (path) {
+                        ref.read(createAccountDeliveryImagesProvider.notifier).onImageFrontIDChanged(path);
+                      }),
                   icon: const Icon(Icons.camera_front),
                   label: const Text('Tomar foto frontal')),
             ),
@@ -399,9 +431,10 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                  onPressed: () async {
-                    pickPhoto(ref: ref, isFront: false);
-                  },
+                  onPressed: () =>
+                      handleImageSelection(context, CameraGalleryServiceImpl().pickImage, (path) {
+                        ref.read(createAccountDeliveryImagesProvider.notifier).onImageRearIDChanged(path);
+                      }),
                   icon: const Icon(Icons.camera_rear),
                   label: const Text('Tomar foto trasera')),
             ),
@@ -409,44 +442,39 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                  onPressed: () async => pickSelfiePhoto(ref: ref),
+                  onPressed: () =>
+                      handleImageSelection(context, CameraGalleryServiceImpl().takeSelfie, (path) {
+                        ref.read(createAccountDeliveryImagesProvider.notifier).onImageOfFaceChanged(path);
+                      }),
                   icon: const Icon(Icons.person),
                   label: const Text('Foto de rostro')),
             ),
-
-            //error message
             ref.watch(createAccountDeliveryImagesProvider).isFormPosted &&
-                    !ref.watch(createAccountDeliveryImagesProvider).isValid
+                !ref.watch(createAccountDeliveryImagesProvider).isValid
                 ? RichText(
-                    text: TextSpan(
-                    text: ref
-                            .watch(createAccountDeliveryImagesProvider)
-                            .imageOfFace
-                            .errMsg ??
-                        ref
-                            .watch(createAccountDeliveryImagesProvider)
-                            .imageFrontID
-                            .errMsg ??
-                        ref
-                            .watch(createAccountDeliveryImagesProvider)
-                            .imageRearID
-                            .errMsg ??
-                        '',
-                    style: const TextStyle(color: Colors.red),
-                  ))
+                text: TextSpan(
+                  text: ref
+                      .watch(createAccountDeliveryImagesProvider)
+                      .imageOfFace
+                      .errMsg ??
+                      ref
+                          .watch(createAccountDeliveryImagesProvider)
+                          .imageFrontID
+                          .errMsg ??
+                      ref
+                          .watch(createAccountDeliveryImagesProvider)
+                          .imageRearID
+                          .errMsg ??
+                      '',
+                  style: const TextStyle(color: Colors.red),
+                ))
                 : const SizedBox(),
-
             const SizedBox(height: 20),
-
             SizedBox(
                 height: 50,
                 width: double.infinity,
                 child: ButtonFill(
-                  onPressed: () {
-                    ref
-                        .watch(createAccountDeliveryImagesProvider.notifier)
-                        .onSubmitted();
-                  },
+                  onPressed: () => registerAccount(context, ref),
                   theme: theme,
                   textButton: 'Registar cuenta',
                 )),
@@ -456,6 +484,7 @@ class _SectionUploadCredentialPhotos extends ConsumerWidget {
     );
   }
 }
+
 
 class _ImageGallery extends StatelessWidget {
   const _ImageGallery({required this.images});
