@@ -81,6 +81,7 @@ flutter:
     - assets/delivery/successful_delivery.png
     - assets/images/logo_sarti_leading.png
     - assets/images/logo_sarti_leading_fill.png
+    - assets/customer/
     - assets/images/tutorial/
     - .env
 
