@@ -16,6 +16,11 @@ final appRouter = GoRouter(
           name: CreateAccountDeliveryView.name,
           builder: (context, GoRouterState state) => const CreateAccountDeliveryView(),
         ),
+        GoRoute(
+          path: '/costumer',
+          name: CreateAccountDeliveryView.name,
+          builder: (context, GoRouterState state) => const CreateAccountDeliveryView(),
+        ),
       ],
     ),
     

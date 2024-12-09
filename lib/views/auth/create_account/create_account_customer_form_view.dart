@@ -14,10 +14,10 @@ import '../../../viewmodels/create_account/create_account_delivery_images_provid
 import '../../../viewmodels/create_account/create_account_delivery_provider.dart';
 import '../../../viewmodels/create_account/states/create_account_user_delivery_state.dart';
 
-class CreateAccountDeliveryView extends ConsumerWidget {
-  static const name = 'create_account_delivery';
+class CreateAccountCustomerFormView extends ConsumerWidget {
+  static const name = 'create_account_customer';
 
-  const CreateAccountDeliveryView({
+  const CreateAccountCustomerFormView({
     super.key,
   });
 
@@ -36,31 +36,16 @@ class CreateAccountDeliveryView extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crea tu cuenta de cliente'),
+        title: const Text('Crea tu cuenta de repartidor'),
       ),
       body: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: controller,
               onPageChanged: notifierCreateAccountDelivery.onCurrentStepChanged,
               children: [
-                _SectionPersonalData(
-                  theme: theme,
-                  onNext: () => nextStep(controller),
-                  notifier: notifierCreateAccountDelivery,
-                  state: stateCreateAccountDeliver,
+                Container(
+                  color: Colors.deepPurple
                 ),
-                _SectionCredentialsUser(
-                  theme: theme,
-                  onNext: () => nextStep(controller),
-                  onPrevious: () => previousStep(controller),
-                  notifier: notifierCreateAccountDelivery,
-                  state: stateCreateAccountDeliver,
-                ),
-                _SectionUploadCredentialPhotos(
-                    theme: theme,
-                    onNext: () => nextStep(controller),
-                    onPrevious: () => previousStep(controller),
-                    images: images),
               ],
             ),
     );

@@ -113,12 +113,11 @@ class _CreateAccountButton extends StatelessWidget {
                             }, icon: Icons.delivery_dining),
                             const SizedBox(height: 34),
                             ButtonFillIcon(theme: theme, textButton: 'Emprendedor', onPressed: () {
-                              context.push('/create-account/${ERoles.business}');
                               context.pop();
                             }, icon: Icons.business_center),
                             const SizedBox(height: 34),
                             ButtonFillIcon(theme: theme, textButton: 'Cliente', onPressed: () {
-                              context.pushNamed(CreateAccountView.name, pathParameters: {'role': ERoles.costumer.toString()});
+                              context.pushNamed(CreateAccountDeliveryView.name);
                               context.pop();
                             }, icon: Icons.person),
                           ],
