@@ -2,8 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:sarti_mobile/models/inputs/image_id.dart';
 
-enum FormStatus { invalid, valid, validating, submitting, submitted, posting }
-
 ///state provider
 final createAccountDeliveryImagesProvider = StateNotifierProvider.autoDispose<
     CreateAccountDeliveryImageNotifier, CreateAccountDeliveryImageState>((ref) {

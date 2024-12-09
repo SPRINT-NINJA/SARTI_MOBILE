@@ -10,6 +10,7 @@ import 'package:sarti_mobile/widgets/auth/password_text_form_field.dart';
 
 import '../../../viewmodels/create_account/create_account_delivery_images_provider.dart';
 import '../../../viewmodels/create_account/create_account_delivery_provider.dart';
+import '../../../viewmodels/create_account/states/create_account_user_delivery_state.dart';
 
 class CreateAccountDeliveryView extends ConsumerWidget {
   static const name = 'create_account_delivery';
@@ -109,7 +110,7 @@ class _SectionPersonalData extends ConsumerWidget {
 
   final ThemeData theme;
   final VoidCallback onNext;
-  final CreateAccountDeliveryState state;
+  final CreateAccountUserDeliveryState state;
   final CreateAccountDeliveryNotifier notifier;
 
   @override
@@ -216,7 +217,7 @@ class _SectionCredentialsUser extends ConsumerWidget {
   final ThemeData theme;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
-  final CreateAccountDeliveryState state;
+  final CreateAccountUserDeliveryState state;
   final CreateAccountDeliveryNotifier notifier;
 
   @override
