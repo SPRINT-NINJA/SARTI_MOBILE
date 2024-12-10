@@ -6,3 +6,7 @@ enum ERoles {
 
 
 enum FormStatus { invalid, valid, validating, submitting, submitted, posting }
+
+
+enum AddressType { address, office, home, business , other }
+

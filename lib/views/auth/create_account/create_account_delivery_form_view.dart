@@ -36,7 +36,7 @@ class CreateAccountDeliveryView extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crea tu cuenta de cliente'),
+        title: const Text('Crea tu cuenta de repartidor'),
       ),
       body: PageView(
               physics: const NeverScrollableScrollPhysics(),

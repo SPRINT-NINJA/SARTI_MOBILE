@@ -1,14 +1,14 @@
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 
-enum AdressType { DOMICILIO, OFICINA }
 
-class CreateAccountUserDeliveryState {
+class CreateAccountUserCostumerState {
   final FormStatus formStatus;
   final double progress;
   final int totalSteps;
+  final int currentStep;
 
-  final List<String> isStepPosted;
+  final List<bool> isStepPosted;
   final List<bool> isStepValid;
   final bool isLoading;
   final bool isSaved;
@@ -24,19 +24,20 @@ class CreateAccountUserDeliveryState {
   final ConfirmPassword confirmPassword;
 
   // section address
-  final String country;
-  final String state;
-  final String city;
-  final String locality;
-  final String colony;
-  final String street;
-  final String zipCode;
-  final String externalNumber;
-  final String internalNumber;
-  final String reference;
-  final AdressType addressType;
+  final Country country;
+  final State state;
+  final City city;
+  final Locality locality;
+  final Colony colony;
+  final Street street;
+  final ZipCode zipCode;
+  final ExternalNumber externalNumber;
+  final InternalNumber internalNumber;
+  final Reference reference;
 
-  const CreateAccountUserDeliveryState({
+  final AddressType addressType;
+
+  const CreateAccountUserCostumerState({
     this.formStatus = FormStatus.invalid,
     this.progress = 0.0,
     this.totalSteps = 0,
@@ -44,6 +45,7 @@ class CreateAccountUserDeliveryState {
     this.isStepValid = const [],
     this.isLoading = false,
     this.isSaved = false,
+    this.currentStep = 0,
     // section personal
     this.name = const Name.pure(),
     this.surname = const Name.pure(),
@@ -53,27 +55,28 @@ class CreateAccountUserDeliveryState {
     this.password = const Password.pure(),
     this.confirmPassword = const ConfirmPassword.pure(),
     // section address
-    this.country = '',
-    this.state = '',
-    this.city = '',
-    this.locality = '',
-    this.colony = '',
-    this.street = '',
-    this.zipCode = '',
-    this.externalNumber = '',
-    this.internalNumber = '',
-    this.reference = '',
-    this.addressType = AdressType.DOMICILIO,
+    this.country = const Country.pure(),
+    this.state = const State.pure(),
+    this.city = const City.pure(),
+    this.locality = const Locality.pure(),
+    this.colony = const Colony.pure(),
+    this.street = const Street.pure(),
+    this.zipCode = const ZipCode.pure(),
+    this.externalNumber = const ExternalNumber.pure(),
+    this.internalNumber = const InternalNumber.pure(),
+    this.reference = const Reference.pure(),
+    this.addressType = AddressType.address,
   });
 
-  CreateAccountUserDeliveryState copyWith({
+  CreateAccountUserCostumerState copyWith({
     FormStatus? formStatus,
     double? progress,
     int? totalSteps,
-    List<String>? isStepPosted,
+    List<bool>? isStepPosted,
     List<bool>? isStepValid,
     bool? isLoading,
     bool? isSaved,
+    int? currentStep,
     // section personal
     Name? name,
     Name? surname,
@@ -83,18 +86,19 @@ class CreateAccountUserDeliveryState {
     Password? password,
     ConfirmPassword? confirmPassword,
     // section address
-    String? country,
-    String? state,
-    String? city,
-    String? locality,
-    String? colony,
-    String? street,
-    String? zipCode,
-    String? externalNumber,
-    String? internalNumber,
-    String? reference,
+    Country? country,
+    State? state,
+    City? city,
+    Locality? locality,
+    Colony? colony,
+    Street? street,
+    ZipCode? zipCode,
+    ExternalNumber? externalNumber,
+    InternalNumber? internalNumber,
+    Reference? reference,
+
   }) {
-    return CreateAccountUserDeliveryState(
+    return CreateAccountUserCostumerState(
       formStatus: formStatus ?? this.formStatus,
       progress: progress ?? this.progress,
       totalSteps: totalSteps ?? this.totalSteps,
@@ -102,6 +106,7 @@ class CreateAccountUserDeliveryState {
       isStepValid: isStepValid ?? this.isStepValid,
       isLoading: isLoading ?? this.isLoading,
       isSaved: isSaved ?? this.isSaved,
+      currentStep: currentStep ?? this.currentStep,
       // section personal
       name: name ?? this.name,
       surname: surname ?? this.surname,
@@ -155,6 +160,12 @@ class CreateAccountUserDeliveryState {
       isStepValid: $isStepValid,
       isLoading: $isLoading,
       isSaved: $isSaved,
+      currentStep: $currentStep,
     )''';
   }
+
+
+
 }
+
+
