@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'validate_email_view.dart';
+import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
 import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
@@ -48,7 +50,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                   ),
                   SizedBox(width: 10),
                   Text(
-                    'usuario',
+                    widget.userEmail,
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -83,11 +85,42 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: AppColors.primaryColor,
-                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    textStyle:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
-                  onPressed: () {
-                    // Lógica para continuar con la autenticación
+                  onPressed: () async {
+                    final email = widget.userEmail;
+                    final password = passwordController.text;
+
+                    if (password.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("La contraseña es obligatoria."),
+                        ),
+                      );
+                      return;
+                    }
+
+                    try {
+                      final token = await AuthService.login(email, password);
+                      if (token != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Inicio de sesión exitoso')),
+                        );
+                        // Redirigir a la pantalla principal o dashboard
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Credenciales incorrectas, intente de nuevo.')),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error al iniciar sesión.')),
+                      );
+                    }
                   },
                   child: Text('Continuar'),
                 ),
@@ -96,18 +129,11 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
             SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                // Acción para crear cuenta
-              },
-              child: Text(
-                'Crear cuenta',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ValidateEmailView()),
+                  MaterialPageRoute(
+                    builder: (context) => ValidateEmailView(),
+                  ),
                 );
               },
               child: Text(
