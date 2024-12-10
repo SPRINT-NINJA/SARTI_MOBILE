@@ -29,8 +29,12 @@ class ValidateEmailView extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Correo electrónico',
                 border: UnderlineInputBorder(),
+                errorText: _isValidEmail(emailController.text)
+                    ? null
+                    : 'Por favor ingresa un correo válido',
               ),
               keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {},
             ),
             SizedBox(height: 40.0),
             Align(
@@ -38,29 +42,13 @@ class ValidateEmailView extends StatelessWidget {
               child: SizedBox(
                 width: 150,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navegar a la vista de recuperación de contraseña
-                    if (emailController.text.isNotEmpty) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RecoveryPasswordView(),
-                        ),
-                      );
-                      } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content:
-                              Text("El correo electrónico es obligatorio."),
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: () => _handleContinue(context),
                   child: Text('Continuar'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: AppColors.primaryColor,
-                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    textStyle:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -81,5 +69,33 @@ class ValidateEmailView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleContinue(BuildContext context) {
+    if (emailController.text.isNotEmpty &&
+        _isValidEmail(emailController.text)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RecoveryPasswordView(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            emailController.text.isEmpty
+                ? "El correo electrónico es obligatorio."
+                : "Por favor ingresa un correo válido.",
+          ),
+        ),
+      );
+    }
+  }
+
+  bool _isValidEmail(String email) {
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 }
