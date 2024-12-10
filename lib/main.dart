@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sarti_mobile/config/config.dart';
+import 'package:sarti_mobile/views/auth/home_screen.dart';
+import 'package:sarti_mobile/views/auth/product_list_screen.dart';
 
 Future<void> main() async {
 
@@ -12,10 +14,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme(selectedColor: 0).theme(),
+      home: HomeScreen(),
     );
   }
 }
