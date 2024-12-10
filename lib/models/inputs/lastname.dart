@@ -28,8 +28,6 @@ class Lastname extends FormzInput<String, LastnameError> {
     if (!lastnameRegExp.hasMatch(value)) return LastnameError.format;
     if (value.length < 4) return LastnameError.minLength;
     if (value.length > 45) return LastnameError.maxLength;
-
-
     return null;
   }
 }

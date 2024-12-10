@@ -9,7 +9,7 @@ import 'package:sarti_mobile/viewmodels/create_account/states/create_account_use
 
 ///state provider
 final createAccountDeliveryProvider = StateNotifierProvider.autoDispose<CreateAccountDeliveryNotifier, CreateAccountUserDeliveryState>((ref) {
-  final deliveryService = ref.watch(userDeliveryServiceProvider).createUserDelivery;
+  final deliveryService = ref.watch(authServiceProvider).createUserDelivery;
   return CreateAccountDeliveryNotifier(deliveryService);
 });
 

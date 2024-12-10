@@ -4,7 +4,7 @@ import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
 import 'package:sarti_mobile/views/screens.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/create-account/delivery',
+  initialLocation: '/create-account/costumer',
   routes: <RouteBase>[
 
     GoRoute(
@@ -15,6 +15,11 @@ final appRouter = GoRouter(
           path: '/delivery',
           name: CreateAccountDeliveryView.name,
           builder: (context, GoRouterState state) => const CreateAccountDeliveryView(),
+        ),
+        GoRoute(
+          path: '/costumer',
+          name: CreateAccountCustomerFormView.name,
+          builder: (context, GoRouterState state) => const CreateAccountCustomerFormView(),
         ),
       ],
     ),
