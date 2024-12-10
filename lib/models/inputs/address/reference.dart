@@ -15,6 +15,7 @@ class Reference extends FormzInput<String, ReferenceError> {
 
   String? get errMsg{
     if (isValid || isPure) return null;
+    if (displayError == ReferenceError.empty) return 'El campo no puede estar vacío';
     if (displayError == ReferenceError.format) return 'Solo se aceptan números';
     if (displayError == ReferenceError.minLength) return 'El campo debe tener al menos 20 caracteres';
     if (displayError == ReferenceError.maxLength) return 'El campo no puede tener más de 100 caracteres';

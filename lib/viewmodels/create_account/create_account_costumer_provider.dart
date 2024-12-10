@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:sarti_mobile/config/config.dart';
+import 'package:sarti_mobile/models/address.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 import 'package:sarti_mobile/models/user_customer.dart';
 import 'package:sarti_mobile/services/services.dart';
@@ -29,24 +30,39 @@ class CreateAccountCustomerNotifier
     );
   }
 
-  Future<String> createUserCustomer(UserCustomer user) async {
+
+  Future<String> createUserCustomer() async {
     if (state.isLoading) return 'Loading';
     if (onSubmitCallback == null) return 'Error';
 
     state = state.copyWith(isLoading: true);
 
-    final userCustomerLike = {
-      "email": user.email,
-      "password": user.password,
-      "name": user.name,
-      "firstLastName": user.firstLastName,
-      "secondLastName": user.secondLastName,
+    final userCustomerLike =  {
+      'email': state.email.value,
+      'password': state.password.value,
+      'confirmPassword': state.password.value,
+      'name': state.name.value,
+      'firstLastName': state.surname.value,
+      'secondLastName': state.lastName.value,
+      'address': {
+        'country': state.country.value,
+        'state': state.state.value,
+        'city': state.city.value,
+        'locality': state.locality.value,
+        'colony': state.colony.value,
+        'street':  state.street.value,
+        'zipCode': state.zipCode.value,
+        'externalNumber': state.externalNumber.value,
+        'internalNumber': state.internalNumber.value,
+        'referenceNear': state.reference.value,
+        'addressType': addressTypeToString(state.addressType),
+      },
     };
 
     try {
       final userCustomer = await onSubmitCallback!(userCustomerLike);
-      state =
-          state.copyWith(isLoading: false, formStatus: FormStatus.submitted);
+      final isSaved = userCustomer != 'Error';
+      state = state.copyWith(isLoading: false, formStatus: FormStatus.submitted, isSaved: isSaved);
 
       print('UserCustomer: $userCustomer');
       return userCustomer;
@@ -122,7 +138,7 @@ class CreateAccountCustomerNotifier
   onEmailChanged(String value) {
     final email = Email.dirty(value);
     final isStepValid = state.isStepValid;
-    isStepValid[state.currentStep] = Formz.validate([email]);
+    isStepValid[state.currentStep] = Formz.validate([email, state.password, state.confirmPassword]);
     state = state.copyWith(
       email: email,
       isStepValid: isStepValid,
@@ -131,19 +147,20 @@ class CreateAccountCustomerNotifier
 
   onPasswordChanged(String value) {
     final password = Password.dirty(value);
+    final confirmPassword = ConfirmPassword.dirty(password: value, value: state.confirmPassword.value);
     final isStepValid = state.isStepValid;
-    isStepValid[state.currentStep] = Formz.validate([password]);
+    isStepValid[state.currentStep] = Formz.validate([password, confirmPassword, state.email]);
     state = state.copyWith(
       password: password,
       isStepValid: isStepValid,
+      confirmPassword: confirmPassword,
     );
   }
 
   onConfirmPasswordChanged(String value) {
-    final confirmPassword =
-        ConfirmPassword.dirty(password: state.password.value, value: value);
+    final confirmPassword = ConfirmPassword.dirty(password: state.password.value, value: value);
     final isStepValid = state.isStepValid;
-    isStepValid[state.currentStep] = Formz.validate([confirmPassword]);
+    isStepValid[state.currentStep] = Formz.validate([confirmPassword, state.password, state.email]);
     state = state.copyWith(
       confirmPassword: confirmPassword,
       isStepValid: isStepValid,
@@ -251,13 +268,18 @@ class CreateAccountCustomerNotifier
     );
   }
 
-  onSubmittedForm() {
+  Future<void> onSubmittedForm() async {
     if (state.currentStep == 0) {
       final isValid = _onValidatePersonalData();
       if (isValid) goToNextStep();
     }else if (state.currentStep == 1) {
       final isValid = _onValidateCredentials();
       if (isValid) goToNextStep();
+    }else if (state.currentStep == 2) {
+      final isValid = _onValidateAddress();
+      if (isValid) {
+        await createUserCustomer();
+      }
     }
   }
 
@@ -302,6 +324,51 @@ class CreateAccountCustomerNotifier
       isStepPosted: isStepPosted,
     );
     return isStepValid[1];
+  }
+
+  bool _onValidateAddress() {
+    final country = Country.dirty(state.country.value);
+    final stateAddress = State.dirty(state.state.value);
+    final city = City.dirty(state.city.value);
+    final locality = Locality.dirty(state.locality.value);
+    final colony = Colony.dirty(state.colony.value);
+    final street = Street.dirty(state.street.value);
+    final zipCode = ZipCode.dirty(state.zipCode.value);
+    final externalNumber = ExternalNumber.dirty(state.externalNumber.value);
+    final internalNumber = InternalNumber.dirty(state.internalNumber.value);
+    final reference = Reference.dirty(state.reference.value);
+    final isStepValid = state.isStepValid;
+    final isStepPosted = state.isStepPosted;
+
+    isStepPosted[2] = true;
+    isStepValid[2] = Formz.validate([
+      country,
+      stateAddress,
+      city,
+      locality,
+      colony,
+      street,
+      zipCode,
+      externalNumber,
+      internalNumber,
+      reference,
+    ]);
+
+    state = state.copyWith(
+      country: country,
+      state: stateAddress,
+      city: city,
+      locality: locality,
+      colony: colony,
+      street: street,
+      zipCode: zipCode,
+      externalNumber: externalNumber,
+      internalNumber: internalNumber,
+      reference: reference,
+      isStepValid: isStepValid,
+      isStepPosted: isStepPosted,
+    );
+    return isStepValid[2];
   }
 
   onCurrentStepChanged(int value) {

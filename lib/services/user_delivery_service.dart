@@ -32,7 +32,7 @@ class AuthService {
   Future<String> createUserCostumer(Map<String, dynamic> userCostumerLike) async {
     try {
       final response =
-          await dio.post('/costumer/signup', data: userCostumerLike);
+          await dio.post('/customer/signup', data: userCostumerLike);
 
       final customResponse = {
         "data": response.data['data'],
@@ -43,7 +43,7 @@ class AuthService {
 
       return customResponse['error'] ? 'Error' : customResponse['data'];
     } catch (e) {
-      throw Exception('Error: $e');
+      return 'Error';
     }
   }
 
