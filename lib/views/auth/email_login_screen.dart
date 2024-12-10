@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'password_login_screen.dart';
 import 'validate_email_view.dart';
-import 'package:sarti_mobile/utils/colors.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 
 class EmailLoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();

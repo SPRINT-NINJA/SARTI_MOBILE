@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/views/auth/email_login_screen.dart'; // Asegúrate de que la ruta sea correcta
-import 'package:sarti_mobile/utils/colors.dart'; // Para el color de la app (si lo usas)
+import 'package:sarti_mobile/config/theme/colors.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final String title;
@@ -15,11 +14,7 @@ class ProductDetailScreen extends StatelessWidget {
     required this.imageUrl,
     required this.price,
     required this.description,
-    this.additionalImages = const [
-      'assets/logo/ICON-SARTI.png', // Imagen de ejemplo
-      'assets/logo/ICON-SARTI.png', // Imagen de ejemplo
-      'assets/logo/ICON-SARTI.png', // Imagen de ejemplo
-    ],
+    this.additionalImages = const [],
   }) : super(key: key);
 
   @override
@@ -27,21 +22,20 @@ class ProductDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryColor, // Cambiar a tu color preferido
-        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart, color: Colors.white),
+            icon: const Icon(Icons.shopping_cart, color: Colors.white),
             onPressed: () {
-              // Navegar al carrito (añadir carrito a la aplicación)
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => ShoppingCartScreen()));
+              // Navega al carrito
             },
           ),
         ],
@@ -52,121 +46,87 @@ class ProductDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Título del producto
               Text(
                 title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
-
-              // Imagen principal del producto
+              const SizedBox(height: 8),
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: GestureDetector(
-                    onTap: () {
-                      _showFullImage(context, imageUrl);
-                    },
-                    child: Image.asset(
-                      imageUrl,
-                      height: 250,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                  child: Image.network(
+                    imageUrl,
+                    height: 250,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-              SizedBox(height: 8),
-
-              // Galería de imágenes adicionales
-              if (additionalImages.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: additionalImages.map((imgUrl) {
-                    return GestureDetector(
-                      onTap: () {
-                        _showFullImage(context, imgUrl);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        width: 60,
-                        height: 60,
+              const SizedBox(height: 8),
+              Text(
+                'Precio: \$${price.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Descripción:',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              if (additionalImages.isNotEmpty) ...[
+                const Text(
+                  'Imágenes adicionales:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: additionalImages.map((imgUrl) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: 80,
+                        height: 80,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
-                            image: AssetImage(imgUrl),
+                            image: NetworkImage(imgUrl),
                             fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              SizedBox(height: 16),
-
-              // Rating y precio
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.orange, size: 24),
-                      SizedBox(width: 4),
-                      Text(
-                        "10",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        " (+50 disponibles)",
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
-                  Text(
-                    '\$$price',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-
-              // Descripción
-              Text(
-                "Lo que tienes que saber del producto:",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                description,
-                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-              ),
-              SizedBox(height: 16),
-
-              // Botón de "Comprar ahora"
+              ],
+              const SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Aquí se llama al modal si no está autenticado
-                    showLoginPromptModal(context); 
+                    // Acción para comprar
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 48),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Comprar ahora',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -178,58 +138,4 @@ class ProductDetailScreen extends StatelessWidget {
       ),
     );
   }
-
-  // Función para mostrar la imagen completa
-  void _showFullImage(BuildContext context, String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: AssetImage(imageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
-            height: MediaQuery.of(context).size.height * 0.5,
-            width: MediaQuery.of(context).size.width * 0.8,
-          ),
-        );
-      },
-    );
-  }
-}
-
-// Modal que se muestra cuando el usuario no está autenticado
-void showLoginPromptModal(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("¿Deseas iniciar sesión?"),
-        content: Text("Para comprar este producto, debes iniciar sesión."),
-        actions: <Widget>[
-          // Botón "Sí", que lleva al usuario a la pantalla de login
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EmailLoginScreen()), // Aquí diriges al usuario al login
-              );
-            },
-            child: Text("Sí"),
-          ),
-          // Botón "No", que cierra el modal
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Cierra el modal
-            },
-            child: Text("No"),
-          ),
-        ],
-      );
-    },
-  );
 }

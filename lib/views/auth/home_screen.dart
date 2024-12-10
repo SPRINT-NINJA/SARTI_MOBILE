@@ -1,186 +1,254 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:sarti_mobile/viewmodels/product/product_viewmodel.dart';
 import 'package:sarti_mobile/views/auth/product_details_screen.dart';
+import 'package:sarti_mobile/views/sellers/sellers_list_view.dart'; // Importar la vista de emprendedores
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        iconTheme: IconThemeData(color: Colors.white),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Banner
-            Container(
-              padding: EdgeInsets.all(16),
-              color: Colors.orange.shade300,
-              child: Text(
-                "Los mejores productos se encuentran aquí",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+    final theme = Theme.of(context);
 
-            // Categorías
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // Emprendedores Card
-                  _buildCategoryCard(
-                    imagePath: 'assets/logo/ICON-SARTI.png',
-                    title: 'Emprendedores',
-                  ),
-                  // Mejores Calificados Card
-                  _buildCategoryCard(
-                    imagePath: 'assets/logo/ICON-SARTI.png',
-                    title: 'Mejores calificados',
-                  ),
-                ],
-              ),
-            ),
-
-            // Productos
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                "Te va a encantar",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            GridView.builder(
-              padding: EdgeInsets.all(16),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.7,
-              ),
-              itemCount: 8,
-              itemBuilder: (context, index) {
-                return _buildProductCard(
-                  context,
-                  title: "Pulsera de bob y patricio estrella",
-                  price: 57.90,
-                  imageUrl: 'assets/logo/ICON-SARTI.png',
-                  description: "Una pulsera divertida con personajes icónicos.",
-                );
+    return ChangeNotifierProvider(
+      create: (_) => ProductViewModel()..fetchProducts(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.primaryColor,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.shopping_cart, color: Colors.white),
+              onPressed: () {
+                // Carrito
               },
             ),
           ],
         ),
-      ),
-    );
-  }
+        body: Consumer<ProductViewModel>(
+          builder: (context, viewModel, child) {
+            if (viewModel.isLoading && viewModel.products.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-  Widget _buildCategoryCard(
-      {required String imagePath, required String title}) {
-    return Container(
-      width: 150,
-      height: 100,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        alignment: Alignment.bottomCenter,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.black.withOpacity(0.4),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
+            if (viewModel.error != null) {
+              return Center(child: Text(viewModel.error!));
+            }
 
-  Widget _buildProductCard(
-    BuildContext context, {
-    required String title,
-    required double price,
-    required String imageUrl,
-    required String description,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        // Navega a la pantalla de detalles del producto
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(
-              title: title,
-              imageUrl: imageUrl,
-              price: price,
-              description: description,
-            ),
-          ),
-        );
-      },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-                  image: DecorationImage(
-                    image: AssetImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  // Header
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    color: theme.primaryColor,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Los mejores productos están aquí',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.orange, size: 16),
-                      Text(" 4.9"),
-                    ],
+                  const SizedBox(height: 16),
+
+                  // Cards de botones
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildFeatureCard(
+                          icon: Icons.store,
+                          title: 'Emprendedor',
+                          theme: theme,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SellersListView(),
+                              ),
+                            );
+                          },
+                        ),
+                        _buildFeatureCard(
+                          icon: Icons.star,
+                          title: 'Mejores calificados',
+                          theme: theme,
+                          onTap: () {
+                            // Lógica para navegar a Mejores calificados
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    "\$$price",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  const SizedBox(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      'Te va a encantar',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Listado de productos
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: viewModel.products.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.7,
+                    ),
+                    itemBuilder: (context, index) {
+                      final product = viewModel.products[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailScreen(
+                                title: product.name,
+                                imageUrl: product.mainImage,
+                                price: product.price,
+                                description: product.description,
+                                additionalImages: product.productImages,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
+                                child: Image.network(
+                                  product.mainImage,
+                                  height: 120,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      product.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '\$${product.price.toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.star,
+                                            size: 14, color: Colors.orange),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          product.rating > 0
+                                              ? product.rating
+                                                  .toStringAsFixed(1)
+                                              : '0.0',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      product.description,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureCard({
+    required IconData icon,
+    required String title,
+    required ThemeData theme,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          color: theme.colorScheme.primaryContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 40, color: theme.primaryColor),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: theme.primaryColor,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

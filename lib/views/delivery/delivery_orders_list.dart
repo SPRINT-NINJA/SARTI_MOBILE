@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/utils/colors.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
 import 'package:sarti_mobile/widgets/delivery/AcceptOrderModal.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_detail.dart';
 // import 'package:sarti_mobile/screens/delivery_profile.dart'; // Import de la pantalla de perfil

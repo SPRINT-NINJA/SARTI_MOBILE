@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/utils/colors.dart';
 import 'validate_email_view.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
+import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   final String userEmail;
