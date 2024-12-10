@@ -4,6 +4,9 @@ import 'package:sarti_mobile/config/theme/colors.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const name = 'login';
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

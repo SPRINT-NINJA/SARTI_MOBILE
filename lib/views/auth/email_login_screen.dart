@@ -5,6 +5,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
 
 class EmailLoginScreen extends StatelessWidget {
+  static const name = 'email-login';
   final TextEditingController emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -70,15 +71,6 @@ class EmailLoginScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Acción para crear cuenta
-                },
-                child: Text(
-                  'Crear cuenta',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
               TextButton(
                 onPressed: () {
                   Navigator.push(

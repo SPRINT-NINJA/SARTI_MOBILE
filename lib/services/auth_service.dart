@@ -1,16 +1,18 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dio/dio.dart';
+import 'package:sarti_mobile/config/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static final Dio _dio = Dio();
+  late final Dio dio;
+  AuthService() : dio = DioConfig.configDio();
 
-  // Replace with your actual backend URL
-  static const String _baseUrl = 'http://localhost:8080/api/sarti';
 
   /// Check if email exists
-  static Future<bool> checkEmailExists(String email) async {
+  Future<bool> checkEmailExists(String email) async {
     try {
       final response =
-          await _dio.get('$_baseUrl/auth/check-email', queryParameters: {
+          await dio.post('/auth/user', queryParameters: {
         'email': email,
       });
 
@@ -25,21 +27,33 @@ class AuthService {
     }
   }
 
-  static Future<String?> login(String email, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     try {
-      final response = await _dio.post(
-        '$_baseUrl/auth/login',
+      final response = await dio.post(
+        '/auth/sign-in',
         data: {'email': email, 'password': password},
       );
 
       if (response.statusCode == 200) {
-        return response.data['token'];
-      } else {
-        return null;
+        final token = response.data['data'];
+        await _saveUserSession(token);
       }
+
+      return response.data;
     } catch (e) {
       print('Error logging in: $e');
       rethrow;
     }
+  }
+
+  Future<void> _saveUserSession(String Token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', Token);
+  }
+
+  //decode jwt token
+  JWT _decodeToken(String token) {
+    final jwt = JWT.decode(token);
+    return jwt;
   }
 }

@@ -32,9 +32,7 @@ class PaginatedSellers {
 
   factory PaginatedSellers.fromJson(Map<String, dynamic> json) {
     return PaginatedSellers(
-      sellers: (json['data']['content'] as List)
-          .map((e) => Seller.fromJson(e))
-          .toList(),
+      sellers: (json['data']['content'] as List).map((e) => Seller.fromJson(e)).toList(),
       totalPages: json['data']['totalPages'],
     );
   }
