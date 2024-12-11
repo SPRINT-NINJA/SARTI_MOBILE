@@ -1,58 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/views/views.dart';
-import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
-import 'package:sarti_mobile/views/auth/email_login_screen.dart';
-import 'package:sarti_mobile/views/auth/login_screen.dart';
-import 'package:sarti_mobile/views/auth/validate_email_view.dart';
-import 'package:sarti_mobile/views/screens.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) =>
+          const WelcomeView(),
+    ),
 
     //create account [delivery, customer, seller]
     GoRoute(
       path: '/create-account',
       builder: (BuildContext context, GoRouterState state) =>
-      const WelcomeView(),
+          const WelcomeView(),
       routes: <RouteBase>[
         GoRoute(
           path: '/delivery',
           name: CreateAccountDeliveryView.name,
           builder: (context, GoRouterState state) =>
-          const CreateAccountDeliveryView(),
+              const CreateAccountDeliveryView(),
         ),
         GoRoute(
           path: '/costumer',
           name: CreateAccountCustomerFormView.name,
           builder: (context, GoRouterState state) =>
-          const CreateAccountCustomerFormView(),
+              const CreateAccountCustomerFormView(),
         ),
         GoRoute(
           path: '/seller',
           name: CreateAccountSellerView.nameView,
           builder: (context, GoRouterState state) =>
-          const CreateAccountSellerView(),
+              const CreateAccountSellerView(),
         ),
-
       ],
-    ),
-
-
-
-    GoRoute(
-      path: '/home',
-      builder: (BuildContext context, GoRouterState state) => const HomeScreen(),
     ),
     GoRoute(
       path: '/login-email',
+      name: EmailLoginScreen.name,
       builder: (BuildContext context, GoRouterState state) =>
           EmailLoginScreen(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (BuildContext context, GoRouterState state) => LoginScreen(),
     ),
     GoRoute(
       path: '/login-pwd',
@@ -86,7 +75,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/validte-email',
       builder: (BuildContext context, GoRouterState state) =>
-          ValidateEmailView(),
+          const ValidateEmailView(),
     ),
     GoRoute(
       path: '/tutorial',
@@ -95,21 +84,17 @@ final appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/login',
-      name: EmailLoginScreen.name,// Optional name for the route, used for navigation
-      builder: (BuildContext context, GoRouterState state) => EmailLoginScreen(),
-    ),
-
-    GoRoute(
       path: '/validate-email',
       name: ValidateEmailView.name,
-      builder: (BuildContext context, GoRouterState state) => const ValidateEmailView(),
+      builder: (BuildContext context, GoRouterState state) =>
+          const ValidateEmailView(),
     ),
 
     GoRoute(
       path: '/home',
       name: HomeScreen.name,
-      builder: (BuildContext context, GoRouterState state) => const HomeScreen(),
+      builder: (BuildContext context, GoRouterState state) =>
+          const HomeScreen(),
     ),
   ],
 );
