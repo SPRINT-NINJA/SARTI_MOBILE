@@ -59,7 +59,7 @@ class _DeliveryOrderHistorialState extends State<DeliveryOrderHistorial> {
           title: Text(order.orderNumber),
           subtitle: Text(order.status as String),
           onTap: () {
-            Navigator.pushNamed(context, '/delivery/order-detail', arguments: order.id);
+            // Navigate to order detail
           },
         );
       },
