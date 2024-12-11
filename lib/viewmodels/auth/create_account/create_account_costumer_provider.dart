@@ -1,11 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:sarti_mobile/config/config.dart';
-import 'package:sarti_mobile/models/address.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
-import 'package:sarti_mobile/models/user_customer.dart';
 import 'package:sarti_mobile/services/services.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/create_account_user_costumer_state.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_costumer_state.dart';
 
 ///state provider
 final createAccountCustomerProvider = StateNotifierProvider.autoDispose<

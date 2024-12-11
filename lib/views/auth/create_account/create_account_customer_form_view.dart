@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/viewmodels/create_account/create_account_costumer_provider.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/create_account_user_costumer_state.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/create_account_costumer_provider.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_costumer_state.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 import 'package:sarti_mobile/widgets/auth/custom_text_form_field.dart';
 import 'package:sarti_mobile/widgets/auth/password_text_form_field.dart';
@@ -25,8 +23,7 @@ class CreateAccountCustomerFormView extends ConsumerWidget {
     final state = ref.watch(createAccountCustomerProvider);
     final notifier = ref.read(createAccountCustomerProvider.notifier);
 
-    Future<void> _onSubmittedForm(BuildContext context) async {
-      final currentContext = context;
+    Future<void> onSubmittedForm(BuildContext context) async {
       notifier.onSubmittedForm().then((_) {
         if (!state.isStepValid[state.currentStep]) return;
         if (context.mounted) {
@@ -79,7 +76,7 @@ class CreateAccountCustomerFormView extends ConsumerWidget {
               onPrevious: () => previousStep(controller),
               state: state,
               notifier: notifier,
-              onSubmittedForm: () => _onSubmittedForm(context)
+              onSubmittedForm: () => onSubmittedForm(context)
 
           ),
         ],
@@ -324,7 +321,6 @@ class _SectionAddressUser extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final currentStep = state.currentStep;
 
     return SingleChildScrollView(
       child: Padding(

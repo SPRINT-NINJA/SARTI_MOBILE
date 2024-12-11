@@ -4,11 +4,11 @@ import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/services/user_delivery_service.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/create_account_user_seller_state.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/steps_form.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_seller_state.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/steps_form.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 
-part 'create_account_seller_provider.g.dart';
+part 'auth_provider.g.dart';
 
 
 final authServiceProvider = Provider<AuthService>((ref) {

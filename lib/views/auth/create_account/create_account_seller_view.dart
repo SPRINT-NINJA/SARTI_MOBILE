@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/viewmodels/create_account/create_account_seller_provider.dart';
 import 'package:sarti_mobile/views/auth/email_login_screen.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill.dart';
 import 'package:sarti_mobile/widgets/auth/password_text_form_field.dart';
 import 'package:sarti_mobile/widgets/full_screen_loader.dart';
 
+import '../../../viewmodels/auth/auth_provider.dart';
 import '../../../widgets/auth/custom_text_form_field.dart';
 
 class CreateAccountSellerView extends ConsumerWidget {

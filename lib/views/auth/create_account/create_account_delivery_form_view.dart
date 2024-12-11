@@ -10,9 +10,10 @@ import 'package:sarti_mobile/widgets/auth/custom_text_form_field.dart';
 import 'package:sarti_mobile/widgets/auth/password_text_form_field.dart';
 import 'package:sarti_mobile/widgets/full_screen_loader.dart';
 
-import '../../../viewmodels/create_account/create_account_delivery_images_provider.dart';
-import '../../../viewmodels/create_account/create_account_delivery_provider.dart';
-import '../../../viewmodels/create_account/states/create_account_user_delivery_state.dart';
+import '../../../viewmodels/auth/create_account/create_account_delivery_images_provider.dart';
+import '../../../viewmodels/auth/create_account/create_account_delivery_provider.dart';
+import '../../../viewmodels/auth/create_account/states/create_account_user_delivery_state.dart';
+
 
 class CreateAccountDeliveryView extends ConsumerWidget {
   static const name = 'create_account_delivery';

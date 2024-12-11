@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/config/router/app_router.dart';
 import 'password_login_screen.dart';
 import 'validate_email_view.dart';
 import 'package:form_field_validator/form_field_validator.dart';
