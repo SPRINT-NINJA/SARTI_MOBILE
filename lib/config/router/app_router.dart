@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
 import 'package:sarti_mobile/views/auth/email_login_screen.dart';
 import 'package:sarti_mobile/views/auth/login_screen.dart';
+import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 import 'package:sarti_mobile/views/screens.dart';
 
 final appRouter = GoRouter(
@@ -49,6 +50,12 @@ final appRouter = GoRouter(
       path: '/login',
       name: EmailLoginScreen.name,// Optional name for the route, used for navigation
       builder: (BuildContext context, GoRouterState state) => EmailLoginScreen(),
+    ),
+
+    GoRoute(
+      path: '/validate-email',
+      name: ValidateEmailView.name,
+      builder: (BuildContext context, GoRouterState state) => const ValidateEmailView(),
     ),
 
     GoRoute(
