@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/config/constant/enums.dart';
 import 'package:sarti_mobile/config/constant/environment.dart';
 import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
 import 'package:sarti_mobile/views/auth/email_login_screen.dart';
-import 'package:sarti_mobile/views/auth/login_screen.dart';
-import 'package:sarti_mobile/views/screens.dart';
+import 'package:sarti_mobile/views/auth/home_screen.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,7 +73,7 @@ class WelcomeView extends StatelessWidget {
             ),
           );
         } else {
-          return CircularProgressIndicator(); // Or a loading indicator
+          return const CircularProgressIndicator(); // Or a loading indicator
         }
       },
     );
@@ -135,6 +133,8 @@ class _CreateAccountButton extends StatelessWidget {
                             }, icon: Icons.delivery_dining),
                             const SizedBox(height: 34),
                             ButtonFillIcon(theme: theme, textButton: 'Emprendedor', onPressed: () {
+                              context.pushNamed(CreateAccountSellerView.nameView);
+
                               context.pop();
                             }, icon: Icons.business_center),
                             const SizedBox(height: 34),

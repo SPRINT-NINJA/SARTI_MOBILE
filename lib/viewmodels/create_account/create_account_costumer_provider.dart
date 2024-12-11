@@ -179,7 +179,7 @@ class CreateAccountCustomerNotifier
   }
 
   onStateChanged(String value) {
-    final stateAddress = State.dirty(value);
+    final stateAddress = StateAddress.dirty(value);
     final isStepValid = state.isStepValid;
     isStepValid[state.currentStep] = Formz.validate([stateAddress]);
     state = state.copyWith(
@@ -328,7 +328,7 @@ class CreateAccountCustomerNotifier
 
   bool _onValidateAddress() {
     final country = Country.dirty(state.country.value);
-    final stateAddress = State.dirty(state.state.value);
+    final stateAddress = StateAddress.dirty(state.state.value);
     final city = City.dirty(state.city.value);
     final locality = Locality.dirty(state.locality.value);
     final colony = Colony.dirty(state.colony.value);

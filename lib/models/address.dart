@@ -28,6 +28,22 @@ class Address {
     this.addressType = AddressType.address
   });
 
+  const Address.pure() : this(
+    country: '',
+    state: '',
+    city: '',
+    locality: '',
+    colony: '',
+    street: '',
+    zipCode: '',
+    externalNumber: '',
+    internalNumber: '',
+    referenceNear: '',
+    addressType: AddressType.address
+  );
+
+
+
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
       country: json['country'],
@@ -43,6 +59,35 @@ class Address {
       addressType: AddressType.values.firstWhere((element) => element.toString() == json['addressType'])
     );
   }
+
+  Address copyWith({
+    String? country,
+    String? state,
+    String? city,
+    String? locality,
+    String? colony,
+    String? street,
+    String? zipCode,
+    String? externalNumber,
+    String? internalNumber,
+    String? referenceNear,
+    AddressType? addressType,
+  }) {
+    return Address(
+      country: country ?? this.country,
+      state: state ?? this.state,
+      city: city ?? this.city,
+      locality: locality ?? this.locality,
+      colony: colony ?? this.colony,
+      street: street ?? this.street,
+      zipCode: zipCode ?? this.zipCode,
+      externalNumber: externalNumber ?? this.externalNumber,
+      internalNumber: internalNumber ?? this.internalNumber,
+      referenceNear: referenceNear ?? this.referenceNear,
+      addressType: addressType ?? this.addressType
+    );
+  }
+
 
   Map<String, dynamic> toJson() {
     return {

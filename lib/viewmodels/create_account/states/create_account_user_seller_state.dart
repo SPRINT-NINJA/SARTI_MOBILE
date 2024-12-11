@@ -2,17 +2,7 @@ import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 
 
-class CreateAccountUserCostumerState {
-  final FormStatus formStatus;
-  final double progress;
-  final int totalSteps;
-  final int currentStep;
-
-  final List<bool> isStepPosted;
-  final List<bool> isStepValid;
-  final bool isLoading;
-  final bool isSaved;
-
+class CreateAccountUserSellerState {
   // section personal
   final Name name;
   final Name surname;
@@ -34,18 +24,14 @@ class CreateAccountUserCostumerState {
   final ExternalNumber externalNumber;
   final InternalNumber internalNumber;
   final Reference reference;
-
   final AddressType addressType;
 
-  const CreateAccountUserCostumerState({
-    this.formStatus = FormStatus.invalid,
-    this.progress = 0.0,
-    this.totalSteps = 0,
-    this.isStepPosted = const [],
-    this.isStepValid = const [],
-    this.isLoading = false,
-    this.isSaved = false,
-    this.currentStep = 0,
+  //section business
+  final BusinessName businessName;
+  final BusinessDescription description;
+  final Wallet wallet;
+
+  const CreateAccountUserSellerState({
     // section personal
     this.name = const Name.pure(),
     this.surname = const Name.pure(),
@@ -66,18 +52,14 @@ class CreateAccountUserCostumerState {
     this.internalNumber = const InternalNumber.pure(),
     this.reference = const Reference.pure(),
     this.addressType = AddressType.address,
+
+    //section business
+    this.businessName = const BusinessName.pure(),
+    this.description = const BusinessDescription.pure(),
+    this.wallet = const Wallet.pure(),
   });
 
-  CreateAccountUserCostumerState copyWith({
-    FormStatus? formStatus,
-    double? progress,
-    int? totalSteps,
-    List<bool>? isStepPosted,
-    List<bool>? isStepValid,
-    bool? isLoading,
-    bool? isSaved,
-    int? currentStep,
-    // section personal
+  CreateAccountUserSellerState copyWith({
     Name? name,
     Name? surname,
     Lastname? lastName,
@@ -97,16 +79,13 @@ class CreateAccountUserCostumerState {
     InternalNumber? internalNumber,
     Reference? reference,
 
+    //section business
+    BusinessName? businessName,
+    BusinessDescription? description,
+    Wallet? wallet,
+
   }) {
-    return CreateAccountUserCostumerState(
-      formStatus: formStatus ?? this.formStatus,
-      progress: progress ?? this.progress,
-      totalSteps: totalSteps ?? this.totalSteps,
-      isStepPosted: isStepPosted ?? this.isStepPosted,
-      isStepValid: isStepValid ?? this.isStepValid,
-      isLoading: isLoading ?? this.isLoading,
-      isSaved: isSaved ?? this.isSaved,
-      currentStep: currentStep ?? this.currentStep,
+    return CreateAccountUserSellerState(
       // section personal
       name: name ?? this.name,
       surname: surname ?? this.surname,
@@ -126,6 +105,11 @@ class CreateAccountUserCostumerState {
       externalNumber: externalNumber ?? this.externalNumber,
       internalNumber: internalNumber ?? this.internalNumber,
       reference: reference ?? this.reference,
+
+      //section business
+      businessName: businessName ?? this.businessName,
+      description: description ?? this.description,
+      wallet: wallet ?? this.wallet,
     );
   }
 
@@ -150,20 +134,6 @@ class CreateAccountUserCostumerState {
       reference: $reference,
     )''';
   }
-
-  String toStringForm() {
-    return '''CreateAccountUserDeliveryState(
-      formStatus: $formStatus,
-      progress: $progress,
-      totalSteps: $totalSteps,
-      isStepPosted: $isStepPosted,
-      isStepValid: $isStepValid,
-      isLoading: $isLoading,
-      isSaved: $isSaved,
-      currentStep: $currentStep,
-    )''';
-  }
-
 
 
 }
