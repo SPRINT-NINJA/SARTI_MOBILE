@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sarti_mobile/viewmodels/product/product_viewmodel.dart';
 import 'package:sarti_mobile/views/auth/product_details_screen.dart';
-import 'package:sarti_mobile/views/sellers/sellers_list_view.dart'; // Importar la vista de emprendedores
+import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -42,10 +44,10 @@ class HomeScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16.0),
                     color: theme.primaryColor,
-                    child: Column(
+                    child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Los mejores productos están aquí',
                           style: TextStyle(
                             fontSize: 24,

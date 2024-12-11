@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sarti_mobile/config/config.dart';
+import 'package:sarti_mobile/mappers/user_mapper.dart';
+import 'package:sarti_mobile/models/sellers/user_seller.dart';
+import 'package:sarti_mobile/models/user.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService();
@@ -13,8 +16,7 @@ class AuthService {
 
   Future<String> createUserSeller(Map<String, dynamic> userSellerLike) async {
     try {
-      final response =
-          await dio.post('/seller/signup', data: userSellerLike);
+      final response = await dio.post('/seller/signup', data: userSellerLike);
 
       final customResponse = {
         "data": response.data['data'],
@@ -29,7 +31,8 @@ class AuthService {
     }
   }
 
-  Future<String> createUserCostumer(Map<String, dynamic> userCostumerLike) async {
+  Future<String> createUserCostumer(
+      Map<String, dynamic> userCostumerLike) async {
     try {
       final response =
           await dio.post('/customer/signup', data: userCostumerLike);
@@ -47,7 +50,8 @@ class AuthService {
     }
   }
 
-  Future<String> createUserDelivery(Map<String, dynamic> userDeliveryLike) async {
+  Future<String> createUserDelivery(
+      Map<String, dynamic> userDeliveryLike) async {
     try {
       final FormData formData = FormData.fromMap({
         "email": userDeliveryLike['email'] ?? '',
@@ -75,6 +79,23 @@ class AuthService {
     } catch (e) {
       print('Error: $e');
       throw Exception('Error: $e');
+    }
+  }
+
+  Future<User?> getUserByEmail(String email) async {
+    try {
+      final queryParameters = {'email': email,};
+      final response = await dio.get('/auth/user', queryParameters: queryParameters);
+
+      if (response.statusCode != 200) return null;
+      if (response.data['error']) return null;
+
+      User user = UserMapper.jsonToModel(response.data['data']);
+      return user;
+
+    } catch (e) {
+      print('Error: $e');
+      return null;
     }
   }
 }

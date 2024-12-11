@@ -12,8 +12,11 @@ export 'address/external_number.dart';
 export 'address/internal_number.dart';
 export 'address/locality.dart';
 export 'address/reference.dart';
-export 'address/state.dart';
+export 'address/state_address.dart';
 export 'address/street.dart';
 export 'address/zip_code.dart';
+export 'business/business_name.dart';
+export 'business/wallet.dart';
+export 'business/business_description.dart';
 
 

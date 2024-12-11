@@ -4,14 +4,14 @@ import 'package:formz/formz.dart';
 enum StateError { empty , minLength, maxLength, format }
 
 // Extend FormzInput and provide the input type and error type.
-class State extends FormzInput<String, StateError> {
+class StateAddress extends FormzInput<String, StateError> {
 
   static final stateRegExp = RegExp(r'^(?!.*\s{2})[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]+$');
   // Call super.pure to represent an unmodified form input.
-  const State.pure() : super.pure('');
+  const StateAddress.pure() : super.pure('');
 
   // Call super.dirty to represent a modified form input.
-  const State.dirty(String value) : super.dirty(value);
+  const StateAddress.dirty(String value) : super.dirty(value);
 
   String? get errMsg{
     if (isValid || isPure) return null;
