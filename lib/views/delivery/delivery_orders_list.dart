@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/models/orders/delivery_orders_model.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
+import 'package:sarti_mobile/services/delivery/delivery_orders_service.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_historial.dart';
 import 'package:sarti_mobile/widgets/delivery/AcceptOrderModal.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_detail.dart';
@@ -18,8 +20,13 @@ class DeliveryOrdersList extends StatefulWidget {
 
 class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
   int _selectedIndex = 0;
-  bool hasPedidos = true; // Cambiar a false para ver la otra vista
+  bool hasPedidos = true; // Update this dynamically based on orders
   final AuthService _authService = AuthService();
+  final DeliveryOrdersService _deliveryOrdersService = DeliveryOrdersService();
+  List<OrderDelivery> _orders = []; // Store fetched orders
+  List<OrderDelivery> _takedOrders = []; // Store fetched orders
+  bool _isLoading = true; // Loading state
+  String? _errorMessage; // Error message
 
   // View para navegacion
   final List<Widget> _screens = [
@@ -27,6 +34,35 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
     DeliveryOrderDetail(), // Vista 'Pedido'
     DeliveryOrderHistorial(), // Vista 'Historial'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchOrders();
+  }
+
+  void _fetchOrders() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final orders = await _deliveryOrdersService.getOrders();
+      final takenOrders = await _deliveryOrdersService.getTakedOrders();
+      setState(() {
+        _orders = orders ?? []; // Replace 'data' with the correct key
+        _takedOrders = takenOrders ?? []; // Replace 'data' with the correct key
+        hasPedidos = _takedOrders.isEmpty;
+        _isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Error fetching orders: $error';
+        _isLoading = false;
+      });
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -91,7 +127,7 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(8.0),
-            itemCount: 4, // Número de pedidos
+            itemCount: _orders.length,
             itemBuilder: (context, index) {
               return Card(
                 elevation: 5,
@@ -106,22 +142,25 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                     children: [
                       Row(
                         children: [
-                          Image.asset('assets/logo/ICON-SARTI.png', height: 100),
+                          //image from url on order
+                          Image.asset('assets/delivery/peding_delivery.png', height: 50),
                           SizedBox(width: 16),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Tarro de barro de 10cm',
+                                  'Pedido #${_orders[index].orderNumber}',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
-                                Text('Calle:', style: TextStyle(color: Colors.grey[600])),
-                                Text('Número:', style: TextStyle(color: Colors.grey[600])),
-                                Text('Colonia:', style: TextStyle(color: Colors.grey[600])),
-                                Text('Municipio:', style: TextStyle(color: Colors.grey[600])),
-                                Text('Estado:', style: TextStyle(color: Colors.grey[600])),
-                                Text('\$150', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                Text('Calle: ${_orders[index].address.street}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Número: ${_orders[index].address.externalNumber}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Colonia: ${_orders[index].address.colony}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Municipio: ${_orders[index].address.city}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Estado: ${_orders[index].address.state}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Código Postal: ${_orders[index].address.zipCode}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Referencia: ${_orders[index].address.referenceNear}', style: TextStyle(color: Colors.grey[600])),
+                                Text('ToTAL: \$${_orders[index].sartiOrder.total}', style: TextStyle(color: Colors.grey[600])),
                               ],
                             ),
                           ),
