@@ -2,58 +2,81 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/config/constant/environment.dart';
 import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
+import 'package:sarti_mobile/views/auth/email_login_screen.dart';
+import 'package:sarti_mobile/views/auth/login_screen.dart';
+import 'package:sarti_mobile/views/screens.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeView extends StatelessWidget {
   const WelcomeView({super.key});
+
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Bienvenido'),
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Image.asset(
-            'assets/images/logo_sarti_leading.png',
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 50),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _LabelInvitedUser(theme: theme),
-                  const SizedBox(height: 80),
-                  Image.asset(
-                    'assets/images/logo_sarti_leading_fill.png',
-                    height: 200,
-                  ),
-                  const SizedBox(height: 80),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+    return FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          final prefs = snapshot.data;
+          final token = prefs?.getString('token');
+
+          // Check for token and redirect if it exists
+          if (token != null) {
+            context.pushNamed(HomeScreen.name);
+            return const SizedBox(); // Empty widget to prevent rendering
+          }
+
+          return Scaffold(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            appBar: AppBar(
+              title: const Text('Bienvenido'),
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Image.asset(
+                  'assets/images/logo_sarti_leading.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            body: SingleChildScrollView(
+              child: SafeArea(
+                child: Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 50),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        _StartSessionButton(theme: theme),
-                        const SizedBox(height: 20),
-                        _CreateAccountButton(theme: theme),
+                        _LabelInvitedUser(theme: theme),
+                        const SizedBox(height: 80),
+                        Image.asset(
+                          'assets/images/logo_sarti_leading_fill.png',
+                          height: 200,
+                        ),
+                        const SizedBox(height: 80),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              _StartSessionButton(theme: theme),
+                              const SizedBox(height: 20),
+                              _CreateAccountButton(theme: theme),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
+          );
+        } else {
+          return CircularProgressIndicator(); // Or a loading indicator
+        }
+      },
     );
   }
 }
@@ -163,7 +186,7 @@ class _StartSessionButton extends StatelessWidget {
           backgroundColor: WidgetStateProperty.all<Color>(theme.primaryColor),
         ),
         onPressed: () {
-          Navigator.pushNamed(context, '/email-login');
+          context.pushNamed(EmailLoginScreen.name);
         },
         child: const Text(
           'Iniciar sesión con correo',
@@ -197,7 +220,7 @@ class _LabelInvitedUser extends StatelessWidget {
           color: theme.primaryColor,
           icon: const Icon(Icons.arrow_circle_right_outlined),
           onPressed: () {
-            Navigator.pushNamed(context, '/home');
+            context.pushNamed(HomeScreen.name);
           },
         ),
       ],

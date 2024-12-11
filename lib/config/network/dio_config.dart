@@ -8,6 +8,9 @@ class DioConfig {
       baseUrl: Environment.API_URL,
       connectTimeout: const Duration(milliseconds: 10000),
       receiveTimeout: const Duration(milliseconds: 30000),
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ));
     // TODO: Add interceptors
     // TODO: Add authentication token to headers

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/config/router/app_router.dart';
 import 'password_login_screen.dart';
 import 'validate_email_view.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
 
 class EmailLoginScreen extends StatelessWidget {
+  static const name = 'email-login';
   final TextEditingController emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -72,21 +75,7 @@ class EmailLoginScreen extends StatelessWidget {
               SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  // Acción para crear cuenta
-                },
-                child: Text(
-                  'Crear cuenta',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ValidateEmailView(),
-                    ),
-                  );
+                  context.pushNamed(ValidateEmailView.name);
                 },
                 child: Text(
                   '¿Olvidaste tu contraseña?',

@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/sellers/seller_model.dart';
 
 class SellerService {
-  final String baseUrl = "http://3.211.99.137:8081/api/sarti/seller/all";
+  late final Dio dio;
+  SellerService() : dio = DioConfig.configDio();
 
   Future<PaginatedSellers> fetchSellers({
     required int page,
@@ -12,20 +14,24 @@ class SellerService {
     String direction = "asc",
     String? searchValue,
   }) async {
-    final uri = Uri.parse(baseUrl).replace(queryParameters: {
-      'page': page.toString(),
-      'size': size.toString(),
-      'sort': sort,
-      'direction': direction,
-      'searchValue': searchValue,
-    });
-
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      return PaginatedSellers.fromJson(json.decode(response.body));
-    } else {
-      throw Exception("Failed to load sellers");
+    try {
+      final response = await dio.get(
+        '/seller/all',
+        queryParameters: {
+          'page': page,
+          'size': size,
+          'sort': sort,
+          'direction': direction,
+          'searchValue': searchValue,
+        },
+      );
+      if (response.statusCode == 200) {
+        return PaginatedSellers.fromJson(response.data);
+      } else {
+        throw Exception("Failed to load sellers");
+      }
+    } catch (e) {
+      throw Exception("Error de red: $e");
     }
   }
 }

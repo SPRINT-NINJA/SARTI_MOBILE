@@ -4,7 +4,11 @@ import 'package:sarti_mobile/views/auth/recovery_password_view.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
 
 class ValidateEmailView extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
+  static const name = 'validate-email';
+
+  const ValidateEmailView({super.key});
+
+  static final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

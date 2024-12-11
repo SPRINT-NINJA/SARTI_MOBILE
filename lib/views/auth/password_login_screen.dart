@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/config/router/app_router.dart';
+import 'package:sarti_mobile/views/auth/home_screen.dart';
 import 'validate_email_view.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
@@ -7,13 +10,14 @@ import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 class PasswordLoginScreen extends StatefulWidget {
   final String userEmail;
 
-  PasswordLoginScreen({required this.userEmail});
+  PasswordLoginScreen({super.key, required this.userEmail});
 
   @override
   _PasswordLoginScreenState createState() => _PasswordLoginScreenState();
 }
 
 class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
+  final AuthService _authService = AuthService();
   final TextEditingController passwordController = TextEditingController();
   bool _obscureText = true; // Controla la visibilidad de la contraseña
 
@@ -43,11 +47,11 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               ),
               child: Row(
                 children: [
-                  CircleAvatar(
+                  /*CircleAvatar(
                     backgroundImage:
                         AssetImage('assets/images/user_profile.png'),
                     radius: 20,
-                  ),
+                  ),*/
                   SizedBox(width: 10),
                   Text(
                     widget.userEmail,
@@ -103,17 +107,17 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                     }
 
                     try {
-                      final token = await AuthService.login(email, password);
-                      if (token != null) {
+                      final response = await _authService.login(email, password);
+                      if (response['error'] != true) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Inicio de sesión exitoso')),
                         );
-                        // Redirigir a la pantalla principal o dashboard
+                        context.pushNamed(HomeScreen.name);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text(
-                                  'Credenciales incorrectas, intente de nuevo.')),
+                                  response['message'] ?? 'Error al iniciar sesión.')),
                         );
                       }
                     } catch (e) {

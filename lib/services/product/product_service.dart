@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:sarti_mobile/config/config.dart';
 import 'dart:convert';
 import 'package:sarti_mobile/models/product/product_model_public.dart';
 
 class ProductService {
-  final String baseUrl = 'http://3.211.99.137:8081/api/sarti/product';
+  late final Dio dio;
+  ProductService() : dio = DioConfig.configDio();
 
   Future<List<Product>> fetchProducts({
     int page = 0,
@@ -13,17 +16,24 @@ class ProductService {
     String searchValue = '',
   }) async {
     try {
-      final response = await http.get(
-        Uri.parse(
-          '$baseUrl?page=$page&size=$size&sort=$sort,$direction&searchValue=$searchValue',
-        ),
+      var sellerId = '';
+      var prdName = '';
+      final response = await dio.get(
+        '/product',
+        queryParameters: {
+          'page': page,
+          'size': size,
+          'sort': sort,
+          'direction': direction,
+          'searchValue': searchValue,
+          'productName': prdName,
+          'sellerId': sellerId,
+        },
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> decodedResponse = json.decode(response.body);
-        final List<dynamic> productsData = decodedResponse['data']['content'];
-
-        return productsData.map((json) => Product.fromJson(json)).toList();
+        final List<Product> products = (response.data['data']['content'] as List).map((product) => Product.fromJson(product)).toList();
+        return products;
       } else {
         throw Exception('Error al cargar los productos: ${response.statusCode}');
       }
