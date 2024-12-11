@@ -50,6 +50,20 @@ class DeliveryOrdersService {
     }
   }
 
+  //get historial orders
+  Future<List<OrderDelivery>> getHistorialOrders() async {
+    try {
+      final response = await dio.get('/order-delivery/history');
+
+      return (response.data['data']['content'] as List)
+          .map((order) => OrderDelivery.fromJson(order))
+          .toList();
+    } catch (e) {
+      print('Error getting orders: $e');
+      rethrow;
+    }
+  }
+
   Future<Map<String, dynamic>> acceptOrder(String orderId) async {
     try {
       final response = await dio.post('/delivery/orders/$orderId/accept');
