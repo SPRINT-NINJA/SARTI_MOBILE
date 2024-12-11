@@ -84,30 +84,6 @@ class CreateAccountCustomerFormView extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar:
-          buildBottomNavigationBar(ref, controller, state.currentStep),
-    );
-  }
-
-  Widget buildBottomNavigationBar(
-      WidgetRef ref, PageController controller, int currentStep) {
-    return BottomNavigationBar(
-      currentIndex: currentStep,
-      onTap: (index) {
-        controller.animateToPage(
-          index,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      },
-      items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person), label: "Información personal"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.card_travel_rounded), label: "Credenciales"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.directions_car_rounded), label: "Direcciónes"),
-      ],
     );
   }
 

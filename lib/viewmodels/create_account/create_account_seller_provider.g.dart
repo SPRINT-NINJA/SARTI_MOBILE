@@ -23,11 +23,11 @@ final getUserByEmailProvider = AutoDisposeFutureProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetUserByEmailRef = AutoDisposeFutureProviderRef<bool>;
-String _$createUserSellerHash() => r'51bd01c3d5003870bc115e8f957f43c5af44a818';
+String _$createUserSellerHash() => r'0c645359361313ec4fd4381d7a66934c46d2b9b7';
 
 /// See also [createUserSeller].
 @ProviderFor(createUserSeller)
-final createUserSellerProvider = AutoDisposeFutureProvider<String>.internal(
+final createUserSellerProvider = AutoDisposeFutureProvider<bool>.internal(
   createUserSeller,
   name: r'createUserSellerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -39,8 +39,8 @@ final createUserSellerProvider = AutoDisposeFutureProvider<String>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef CreateUserSellerRef = AutoDisposeFutureProviderRef<String>;
-String _$stepsFormSellerHash() => r'77fe34af1129c856d58d959056e6ffca30d467e2';
+typedef CreateUserSellerRef = AutoDisposeFutureProviderRef<bool>;
+String _$stepsFormSellerHash() => r'bda52d85434c91de65c98882bf95850b1551f5bc';
 
 /// See also [StepsFormSeller].
 @ProviderFor(StepsFormSeller)
@@ -56,7 +56,7 @@ final stepsFormSellerProvider =
 );
 
 typedef _$StepsFormSeller = AutoDisposeNotifier<StepsForm>;
-String _$userSellerStateHash() => r'8b4674d523ce53d87169044cb91f47f727c40bfc';
+String _$userSellerStateHash() => r'f0b0309718b4e6c55b8528db66e7abe208d3922e';
 
 /// See also [UserSellerState].
 @ProviderFor(UserSellerState)

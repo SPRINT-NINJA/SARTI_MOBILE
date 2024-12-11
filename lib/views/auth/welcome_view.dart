@@ -19,14 +19,6 @@ class WelcomeView extends StatelessWidget {
       future: SharedPreferences.getInstance(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          final prefs = snapshot.data;
-          final token = prefs?.getString('token');
-
-          // Check for token and redirect if it exists
-          if (token != null) {
-            context.pushNamed(HomeScreen.name);
-            return const SizedBox(); // Empty widget to prevent rendering
-          }
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
