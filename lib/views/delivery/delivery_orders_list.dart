@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/services/auth_service.dart';
+import 'package:sarti_mobile/views/delivery/delivery_order_historial.dart';
 import 'package:sarti_mobile/widgets/delivery/AcceptOrderModal.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_detail.dart';
+
+import '../auth/welcome_view.dart';
 // import 'package:sarti_mobile/screens/delivery_profile.dart'; // Import de la pantalla de perfil
 
 class DeliveryOrdersList extends StatefulWidget {
+  static const name = 'delivery-orders-list';
+
   @override
   _DeliveryOrdersListState createState() => _DeliveryOrdersListState();
 }
@@ -12,12 +19,13 @@ class DeliveryOrdersList extends StatefulWidget {
 class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
   int _selectedIndex = 0;
   bool hasPedidos = true; // Cambiar a false para ver la otra vista
+  final AuthService _authService = AuthService();
 
   // View para navegacion
   final List<Widget> _screens = [
     DeliveryOrdersList(), // Vista 'Inicio'
     DeliveryOrderDetail(), // Vista 'Pedido'
-    // Perfil(), // Vista 'Perfil' (agregar cuando esté lista)
+    DeliveryOrderHistorial(), // Vista 'Historial'
   ];
 
   void _onItemTapped(int index) {
@@ -30,6 +38,15 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () {
+              _authService.logout();
+              context.pushNamed(WelcomeView.name);
+            },
+          ),
+        ],
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
@@ -37,6 +54,7 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
             width: 24,
             height: 24,
           ),
+
         ),
         backgroundColor: AppColors.primaryColor,
       ),
@@ -47,9 +65,9 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Pedido'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+          BottomNavigationBarItem(icon: Icon(Icons.all_inbox), label: 'En recolección'),
+          BottomNavigationBarItem(icon: Icon(Icons.approval_rounded), label: 'Mis pedidos'),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Historial de pedidos'),
         ],
       ),
     );
