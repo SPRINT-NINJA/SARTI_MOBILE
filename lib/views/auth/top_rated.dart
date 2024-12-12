@@ -1,212 +1,220 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/viewmodels/product/product_viewmodel.dart';
+import 'package:sarti_mobile/views/auth/product_details_screen.dart';
 
-class Producto {
-  final String nombre;
-  final String imagen;
-  final double precio;
-  final double calificacion;
-
-  Producto({
-    required this.nombre,
-    required this.imagen,
-    required this.precio,
-    required this.calificacion,
-  });
-}
-
-class ProductosScreen extends StatelessWidget {
-  final List<Producto> productos = [
-    Producto(
-        nombre: 'Pulsera de bob y patricio estrella',
-        imagen: 'assets/logo/ICON-SARTI.png',
-        precio: 57.90,
-        calificacion: 4.5),
-    Producto(
-        nombre: 'Juego de vajilla pintada a mano',
-        imagen: 'assets/logo/ICON-SARTI.png',
-        precio: 30000,
-        calificacion: 5.0),
-    Producto(
-        nombre: 'Otro producto',
-        imagen: 'assets/logo/ICON-SARTI.png',
-        precio: 57.90,
-        calificacion: 4.2),
-    Producto(
-        nombre: 'Otro producto 2',
-        imagen: 'assets/logo/ICON-SARTI.png',
-        precio: 57.90,
-        calificacion: 3.8),
-    // Agrega más productos según sea necesario
-  ];
-
+class TopRatedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        iconTheme: IconThemeData(color: Colors.white),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: [
-            // Tarjeta destacada (primer producto)
-            FeaturedProductCard(
-                producto: productos[
-                    1]), // Cambia el índice según el producto que quieras destacar
-            SizedBox(height: 10),
-
-            // GridView para los productos
-            GridView.builder(
-              physics:
-                  NeverScrollableScrollPhysics(), // Evita que el GridView se desplace de manera independiente
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 0.7, // Ajusta el aspecto de la tarjeta
-              ),
-              itemCount: productos.length,
-              itemBuilder: (context, index) {
-                if (index == 1)
-                  return Container(); // Omitir el producto destacado en el GridView
-                return ProductCard(producto: productos[index]);
-              },
-            ),
-          ],
+    return ChangeNotifierProvider(
+      create: (_) => ProductViewModel()..fetchProducts(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryColor,
+          title: const Text('Top Rated Products'),
         ),
-      ),
-    );
-  }
-}
-
-class FeaturedProductCard extends StatelessWidget {
-  final Producto producto;
-
-  const FeaturedProductCard({required this.producto});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(producto.imagen),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 10,
-            left: 10,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  producto.nombre,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    shadows: [Shadow(blurRadius: 5, color: Colors.black)],
-                  ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  "\$${producto.precio.toStringAsFixed(2)}",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    shadows: [Shadow(blurRadius: 5, color: Colors.black)],
-                  ),
-                ),
-                Row(
-                  children: List.generate(5, (index) {
-                    return Icon(
-                      Icons.star,
-                      color: index < producto.calificacion
-                          ? Colors.amber
-                          : Colors.white,
-                      size: 18,
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final Producto producto;
-
-  const ProductCard({required this.producto});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: Image.asset(
-              producto.imagen,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
+        body: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  producto.nombre,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                // Encabezado
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Top Rated Products',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Consumer<ProductViewModel>(
+                        builder: (context, viewModel, _) {
+                          return DropdownButton<String>(
+                            dropdownColor: AppColors.primaryColor,
+                            value: viewModel.sortDirection,
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                viewModel.sortDirection = newValue;
+                                viewModel.fetchProducts(reset: true);
+                              }
+                            },
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'desc',
+                                child: Text(
+                                  'Mayor a menor',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 'asc',
+                                child: Text(
+                                  'Menor a mayor',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                            icon: const Icon(Icons.sort, color: Colors.black),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 5),
-                Row(
-                  children: [
-                    Text(
-                      "\$${producto.precio.toStringAsFixed(2)}",
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
-                    Spacer(),
-                    Row(
-                      children: List.generate(5, (index) {
-                        return Icon(
-                          Icons.star,
-                          color: index < producto.calificacion
-                              ? Colors.amber
-                              : Colors.grey,
-                          size: 14,
-                        );
-                      }),
-                    ),
-                  ],
+
+                // GridView dentro de un contenedor con altura fija
+                Consumer<ProductViewModel>(
+                  builder: (context, viewModel, _) {
+                    if (viewModel.isLoading && viewModel.products.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (viewModel.error != null) {
+                      return Center(child: Text(viewModel.error!));
+                    }
+
+                    if (viewModel.products.isEmpty) {
+                      return const Center(child: Text('No hay productos disponibles.'));
+                    }
+
+                    final paginatedProducts = viewModel.products;
+
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7, // Ajusta la altura
+                      child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 3 / 4,
+                        ),
+                        itemCount: paginatedProducts.length,
+                        itemBuilder: (context, index) {
+                          final product = paginatedProducts[index];
+
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailScreen(
+                                    title: product.name,
+                                    imageUrl: product.mainImage,
+                                    price: product.price,
+                                    description: product.description,
+                                    additionalImages: product.productImages,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              elevation: 5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(20)),
+                                    child: Image.network(
+                                      product.mainImage,
+                                      fit: BoxFit.cover,
+                                      height: 120,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          product.name,
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.star,
+                                                color: Colors.orangeAccent, size: 16),
+                                            const SizedBox(width: 5),
+                                            Text(
+                                              product.rating.toStringAsFixed(1),
+                                              style:
+                                                  const TextStyle(color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          '\$${product.price.toStringAsFixed(2)}',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+
+                // Paginación
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          final viewModel = Provider.of<ProductViewModel>(context,
+                              listen: false);
+                          if (viewModel.currentPage > 0) {
+                            viewModel.currentPage--;
+                            viewModel.fetchProducts(reset: true);
+                          }
+                        },
+                        icon: const Icon(Icons.chevron_left),
+                      ),
+                      Consumer<ProductViewModel>(
+                        builder: (context, viewModel, _) {
+                          return Text('Página ${viewModel.currentPage + 1}');
+                        },
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          final viewModel = Provider.of<ProductViewModel>(context,
+                              listen: false);
+                          if (viewModel.products.length == viewModel.pageSize) {
+                            viewModel.currentPage++;
+                            viewModel.fetchProducts(reset: true);
+                          }
+                        },
+                        icon: const Icon(Icons.chevron_right),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
+
       ),
     );
   }

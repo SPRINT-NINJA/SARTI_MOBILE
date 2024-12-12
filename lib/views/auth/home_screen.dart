@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:sarti_mobile/viewmodels/product/product_viewmodel.dart';
 import 'package:sarti_mobile/views/auth/product_details_screen.dart';
 import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
-import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Importar la vista de emprendedores
+import 'package:sarti_mobile/views/auth/top_rated.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
 
@@ -98,7 +98,12 @@ class HomeScreen extends StatelessWidget {
                                 title: 'Mejores calificados',
                                 theme: theme,
                                 onTap: () {
-                                  // Lógica para navegar a Mejores calificados
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TopRatedScreen(),
+                                    ),
+                                  );
                                 },
                               ),
                             ],

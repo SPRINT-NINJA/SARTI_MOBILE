@@ -49,7 +49,7 @@ final appRouter = GoRouter(
           PasswordLoginScreen(userEmail: ''),
     ),
     GoRoute(
-      path: '/product-detail',
+      path: '/product/{id}',
       builder: (BuildContext context, GoRouterState state) =>
           const ProductDetailScreen(
         imageUrl: '',
@@ -59,7 +59,7 @@ final appRouter = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/product-list',
+      path: '/product',
       builder: (BuildContext context, GoRouterState state) =>
           ProductListScreen(),
     ),
@@ -69,8 +69,9 @@ final appRouter = GoRouter(
           RecoveryPasswordView(),
     ),
     GoRoute(
-      path: '/top-rated',
-      builder: (BuildContext context, GoRouterState state) => ProductosScreen(),
+      path: '/rate',
+      builder: (BuildContext context, GoRouterState state) => 
+          TopRatedScreen(),
     ),
     GoRoute(
       path: '/validte-email',
