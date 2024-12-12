@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/mappers/user_mapper.dart';
-import 'package:sarti_mobile/models/sellers/user_seller.dart';
 import 'package:sarti_mobile/models/user.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {

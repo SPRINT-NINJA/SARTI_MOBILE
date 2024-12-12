@@ -1,11 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sarti_mobile/config/router/app_router.dart';
+import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/viewmodels/product/product_viewmodel.dart';
 import 'package:sarti_mobile/views/auth/product_details_screen.dart';
-import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
 import 'package:sarti_mobile/views/auth/top_rated.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sarti_mobile/views/customer/shopping_scree.dart';
+import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
+import 'package:sarti_mobile/views/views.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importar la vista de emprendedores
 
 class HomeScreen extends StatelessWidget {
 
@@ -16,6 +21,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final AuthService _authService = AuthService();
 
 
     return FutureBuilder<SharedPreferences>(
@@ -31,10 +37,20 @@ class HomeScreen extends StatelessWidget {
                 elevation: 0,
                 automaticallyImplyLeading: prefs?.getString('token') == null,
                 actions: [
+                  if (prefs?.getString('token') != null)
+                    IconButton(
+                      icon: const Icon(Icons.shopping_cart, color: Colors.white),
+                      onPressed: () {
+                        // Carrito
+                        context.pushNamed(ShoppingCartScreen.name);
+                      },
+                    ),
+
                   IconButton(
-                    icon: const Icon(Icons.shopping_cart, color: Colors.white),
+                    icon: const Icon(Icons.logout, color: Colors.white),
                     onPressed: () {
-                      // Carrito
+                      _authService.logout();
+                      context.pushNamed(WelcomeView.name);
                     },
                   ),
                 ],

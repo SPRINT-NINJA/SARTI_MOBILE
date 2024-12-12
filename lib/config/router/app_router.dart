@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/views/customer/shopping_scree.dart';
+import 'package:sarti_mobile/views/delivery/delivery_order_taken.dart';
+import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'package:sarti_mobile/views/views.dart';
 
 final appRouter = GoRouter(
@@ -7,6 +10,7 @@ final appRouter = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
+      name: WelcomeView.name,
       builder: (BuildContext context, GoRouterState state) =>
           const WelcomeView(),
     ),
@@ -24,7 +28,7 @@ final appRouter = GoRouter(
               const CreateAccountDeliveryView(),
         ),
         GoRoute(
-          path: '/costumer',
+          path: '/customer',
           name: CreateAccountCustomerFormView.name,
           builder: (context, GoRouterState state) =>
               const CreateAccountCustomerFormView(),
@@ -45,8 +49,9 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/login-pwd',
+      name: PasswordLoginScreen.name,
       builder: (BuildContext context, GoRouterState state) =>
-          PasswordLoginScreen(userEmail: ''),
+          PasswordLoginScreen(userEmail: '', userName: ''),
     ),
     GoRoute(
       path: '/product/{id}',
@@ -66,7 +71,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/recovery-pwd',
       builder: (BuildContext context, GoRouterState state) =>
-          RecoveryPasswordView(),
+          const RecoveryPasswordView(userEmail: ''),
     ),
     GoRoute(
       path: '/rate',
@@ -97,5 +102,18 @@ final appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           const HomeScreen(),
     ),
+
+    GoRoute(path: '/home-delivery',
+        name: DeliveryOrdersList.name,
+        builder: (BuildContext context, GoRouterState state) =>
+            DeliveryOrdersList()
+    ),
+
+    GoRoute(
+      path: '/shopping-cart',
+      name: ShoppingCartScreen.name,
+      builder: (BuildContext context, GoRouterState state) =>
+          ShoppingCartScreen(),
+    )
   ],
 );

@@ -19,6 +19,8 @@ class Seller {
       description: json['description'],
     );
   }
+
+
 }
 
 class PaginatedSellers {

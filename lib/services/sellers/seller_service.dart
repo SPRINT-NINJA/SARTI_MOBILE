@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/sellers/seller_model.dart';

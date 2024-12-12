@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/views/auth/login_screen.dart';
 import 'package:sarti_mobile/views/auth/recovery_password_view.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
@@ -9,6 +10,7 @@ class ValidateEmailView extends StatelessWidget {
   const ValidateEmailView({super.key});
 
   static final TextEditingController emailController = TextEditingController();
+  static final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +77,28 @@ class ValidateEmailView extends StatelessWidget {
     );
   }
 
-  void _handleContinue(BuildContext context) {
+  void _handleContinue(BuildContext context) async {
     if (emailController.text.isNotEmpty &&
         _isValidEmail(emailController.text)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RecoveryPasswordView(),
-        ),
-      );
+      var response = await _authService.sendCode(emailController.text);
+
+      if (response != true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecoveryPasswordView(
+              userEmail: emailController.text,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al enviar el código.'),
+          ),
+        );
+      }
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

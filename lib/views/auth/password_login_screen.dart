@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/config/router/app_router.dart';
 import 'package:sarti_mobile/views/auth/home_screen.dart';
+import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'validate_email_view.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
-import 'package:sarti_mobile/views/auth/validate_email_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
-  final String userEmail;
+  static const name = 'login-pwd';
 
-  PasswordLoginScreen({super.key, required this.userEmail});
+  final String userEmail;
+  final String userName;
+
+  PasswordLoginScreen({super.key, required this.userEmail, required this.userName});
 
   @override
   _PasswordLoginScreenState createState() => _PasswordLoginScreenState();
@@ -54,7 +56,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                   ),*/
                   SizedBox(width: 10),
                   Text(
-                    widget.userEmail,
+                    widget.userName,
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -112,7 +114,19 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Inicio de sesión exitoso')),
                         );
-                        context.pushNamed(HomeScreen.name);
+                        switch (response['role']) {
+                          case 'COMPRADOR':
+                            context.pushNamed(HomeScreen.name);
+                            break;
+                          case 'EMPRENDEDOR':
+                            context.pushNamed(HomeScreen.name);
+                            break;
+                          case 'REPARTIDOR':
+                            context.pushNamed(DeliveryOrdersList.name);
+                            break;
+                          default:
+                            context.go('/home');
+                        }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

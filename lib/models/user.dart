@@ -1,50 +1,65 @@
-
-import 'package:sarti_mobile/models/address.dart';
-
 class User {
-  String name;
-  String firstLastName;
-  String secondLastName;
+  int id;
   String email;
   String password;
-  Address address;
+  String token;
+  String role;
+  bool blocked;
+  bool status;
+  bool verified;
+  String lastAccess;
+  String createdAt;
+  String updatedAt;
 
 
   User({
-    required this.name,
-    required this.firstLastName,
-    required this.secondLastName,
+    required this.id,
     required this.email,
     required this.password,
-    required this.address,
+    required this.token,
+    required this.role,
+    required this.blocked,
+    required this.status,
+    required this.verified,
+    required this.lastAccess,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      firstLastName: json['firstLastName'],
-      secondLastName: json['secondLastName'],
+      id: json['id'],
       email: json['email'],
       password: json['password'],
-      address: Address.fromJson(json['address']),
+      token: json['token'],
+      role: json['role'],
+      blocked: json['blocked'],
+      status: json['status'],
+      verified: json['verified'],
+      lastAccess: json['lastAccess'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'firstLastName': firstLastName,
-      'secondLastName': secondLastName,
+      'id': id,
       'email': email,
       'password': password,
-      'address': address.toJson(),
+      'token': token,
+      'role': role,
+      'blocked': blocked,
+      'status': status,
+      'verified': verified,
+      'lastAccess': lastAccess,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 
   @override
   String toString() {
-    return 'User{name: $name, firstLastName: $firstLastName, secondLastName: $secondLastName, email: $email, password: $password, address: $address}';
+    return 'User{id: $id, email: $email, password: $password, token: $token, role: $role, blocked: $blocked, status: $status, verified: $verified, lastAccess: $lastAccess, createdAt: $createdAt, updatedAt: $updatedAt}';
   }
-
-
 }
