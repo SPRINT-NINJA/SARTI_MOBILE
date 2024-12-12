@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/config/router/app_router.dart';
+import 'package:sarti_mobile/services/auth_service.dart';
 import 'password_login_screen.dart';
 import 'validate_email_view.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -12,6 +14,8 @@ class EmailLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService _authService = AuthService();
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -55,13 +59,33 @@ class EmailLoginScreen extends StatelessWidget {
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
+
+                        var emailValidated = emailController.text;
+                        var nameValidated = '';
+                        try {
+                          final response = await _authService.checkEmailExists(emailController.text);
+
+                          if (response == '') {
+                            throw Exception("El correo no existe.");
+                          }
+                          nameValidated = response;
+                        }catch(e){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("El correo no existe."),
+                            ),
+                          );
+                          return;
+                        }
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PasswordLoginScreen(
                               userEmail: emailController.text,
+                              userName: nameValidated,
                             ),
                           ),
                         );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
 
 class ShoppingCartScreen extends StatelessWidget {
+  static const name = 'shopping-cart';
   final List<CartItem> items = [
     CartItem(
       name: 'Pulsera de correa de amistad sobre Bob y Patricio Estrella',

@@ -4,10 +4,12 @@ import 'package:sarti_mobile/config/constant/environment.dart';
 import 'package:sarti_mobile/views/auth/create_account/create_account.dart';
 import 'package:sarti_mobile/views/auth/email_login_screen.dart';
 import 'package:sarti_mobile/views/auth/home_screen.dart';
+import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeView extends StatelessWidget {
+  static const name = 'welcome';
   const WelcomeView({super.key});
 
 
@@ -19,6 +21,15 @@ class WelcomeView extends StatelessWidget {
       future: SharedPreferences.getInstance(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          final prefs = snapshot.data;
+          final token = prefs?.getString('token');
+          final role = prefs?.getString('role');
+
+          // Check for token and redirect if it exists
+          if (token != null) {
+            context.pushNamed(role == 'REPARTIDOR' ? DeliveryOrdersList.name : HomeScreen.name);
+            return const SizedBox(); // Empty widget to prevent rendering
+          }
 
           return Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,

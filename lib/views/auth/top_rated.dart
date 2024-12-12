@@ -16,6 +16,7 @@ class Producto {
 }
 
 class ProductosScreen extends StatelessWidget {
+  static const name = 'top-rated';
   final List<Producto> productos = [
     Producto(
         nombre: 'Pulsera de bob y patricio estrella',
