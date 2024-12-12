@@ -69,6 +69,10 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
     setState(() {
       _selectedIndex = index;
     });
+    //if is the first option, fetch orders
+    if (index == 0) {
+      _fetchOrders();
+    }
   }
 
   @override
@@ -207,13 +211,14 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                         alignment: Alignment.bottomRight,
                         child: ElevatedButton(
                           onPressed: () {
-                            showDialog(
-                              context: context, 
-                              builder: (context) => AcceptOrderModal(
-                                orderId: _orders[index].id,
-                              ),
-
-                            );
+                            showDialog<bool>(
+                              context: context,
+                              builder: (context) => AcceptOrderModal(orderId: _orders[index].id),
+                            ).then((result) {
+                              if (result == true) {
+                                _fetchOrders();
+                              }
+                            });
                           },
                           child: Text('Aceptar pedido'),
                           style: ElevatedButton.styleFrom(
