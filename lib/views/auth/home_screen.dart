@@ -9,7 +9,6 @@ import 'package:sarti_mobile/views/auth/product_details_screen.dart';
 import 'package:sarti_mobile/views/auth/top_rated.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
-import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
 import 'package:sarti_mobile/views/views.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importar la vista de emprendedores
 

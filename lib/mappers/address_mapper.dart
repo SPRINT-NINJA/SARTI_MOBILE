@@ -13,5 +13,5 @@ class AddressMapper {
       state: json['state'] ?? '',
       country: json['country'] ?? '',
       zipCode: json['zipCode'] ?? '',
-      addressType: AddressType.values.firstWhere((element) => element.toString() == json['addressType']) ?? AddressType.address);
+      addressType: AddressType.values.firstWhere((element) => element.toString() == json['addressType']));
 }

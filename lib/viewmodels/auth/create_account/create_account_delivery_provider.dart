@@ -4,7 +4,7 @@ import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 import 'package:sarti_mobile/models/models.dart';
 import 'package:sarti_mobile/services/services.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/create_account_user_delivery_state.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_delivery_state.dart';
 
 
 ///state provider

@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 
-import 'package:flutter/material.dart';
-
 const Color _primaryColor = Color.fromRGBO(248, 151, 50, 1);
 
 const List<Color> _colorsTheme = [

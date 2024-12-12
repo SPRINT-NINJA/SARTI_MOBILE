@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/services/user_delivery_service.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/create_account_user_seller_state.dart';
-import 'package:sarti_mobile/viewmodels/create_account/states/steps_form.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_seller_state.dart';
+import 'package:sarti_mobile/viewmodels/auth/create_account/states/steps_form.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 
-part 'create_account_seller_provider.g.dart';
+part 'auth_provider.g.dart';
+
+
+final authServiceProvider = Provider<AuthService>((ref) {
+  return AuthService();
+});
+
+final loadingProvider = StateProvider<bool>((ref) => false);
 
 @riverpod
 class StepsFormSeller extends _$StepsFormSeller {
   @override
-  StepsForm build() => StepsForm(
-        currentStep: 0,
-        totalSteps: 2,
-        controller: PageController(),
-        isStepPosted: List.filled(3, false),
-        isStepValid: List.filled(3, false),
-        isLoading: false,
-        isSaved: false,
-      );
+  StepsForm build() {
+    const int steps = 4;
+
+    return StepsForm(
+      currentStep: 0,
+      totalSteps: steps - 1,
+      controller: PageController(),
+      isStepPosted: List.filled(steps, false),
+      isStepValid: List.filled(steps, false),
+      isLoading: false,
+      isSaved: false,
+    );
+  }
 
   onCurrentStepChanged(int value) {
     state = state.copyWith(currentStep: value);
@@ -49,7 +62,6 @@ class StepsFormSeller extends _$StepsFormSeller {
     state = state.copyWith(isSaved: value);
   }
 
-
   void goToNextStep() {
     //controller
     state.controller.nextPage(
@@ -71,8 +83,7 @@ class StepsFormSeller extends _$StepsFormSeller {
 @riverpod
 class UserSellerState extends _$UserSellerState {
   @override
-  CreateAccountUserSellerState build() =>
-      const CreateAccountUserSellerState();
+  CreateAccountUserSellerState build() => const CreateAccountUserSellerState();
 
   onNameChanged(String value) {
     final name = Name.dirty(value);
@@ -173,7 +184,6 @@ class UserSellerState extends _$UserSellerState {
   bool isFormValid(int index) {
     switch (index) {
       case 0:
-
         final name = Name.dirty(state.name.value);
         final surname = Name.dirty(state.surname.value);
         final lastName = Lastname.dirty(state.lastName.value);
@@ -185,11 +195,71 @@ class UserSellerState extends _$UserSellerState {
         );
 
         return Formz.validate([
-          name,
-          surname,
-          lastName,
+          state.name,
+          state.surname,
+          state.lastName,
         ]);
       case 1:
+        final businessName = BusinessName.dirty(state.businessName.value);
+        final description = BusinessDescription.dirty(state.description.value);
+        final wallet = Wallet.dirty(state.wallet.value);
+
+        state = state.copyWith(
+          businessName: businessName,
+          description: description,
+          wallet: wallet,
+        );
+
+        return Formz.validate([
+          state.businessName,
+          state.description,
+          state.wallet,
+        ]);
+
+      case 2:
+        final email = Email.dirty(state.email.value);
+        final password = Password.dirty(state.password.value);
+        final confirmPassword = ConfirmPassword.dirty(
+          password: state.password.value,
+          value: state.confirmPassword.value,
+        );
+
+        state = state.copyWith(
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword,
+        );
+
+        return Formz.validate([
+          state.email,
+          state.password,
+          state.confirmPassword,
+        ]);
+      case 3:
+        final country = Country.dirty(state.country.value);
+        final stateAddress = StateAddress.dirty(state.state.value);
+        final city = City.dirty(state.city.value);
+        final locality = Locality.dirty(state.locality.value);
+        final colony = Colony.dirty(state.colony.value);
+        final street = Street.dirty(state.street.value);
+        final zipCode = ZipCode.dirty(state.zipCode.value);
+        final externalNumber = ExternalNumber.dirty(state.externalNumber.value);
+        final internalNumber = InternalNumber.dirty(state.internalNumber.value);
+        final reference = Reference.dirty(state.reference.value);
+
+        state = state.copyWith(
+          country: country,
+          state: stateAddress,
+          city: city,
+          locality: locality,
+          colony: colony,
+          street: street,
+          zipCode: zipCode,
+          externalNumber: externalNumber,
+          internalNumber: internalNumber,
+          reference: reference,
+        );
+
         return Formz.validate([
           state.country,
           state.state,
@@ -202,18 +272,13 @@ class UserSellerState extends _$UserSellerState {
           state.internalNumber,
           state.reference,
         ]);
-      case 2:
-        return Formz.validate([
-          state.businessName,
-          state.description,
-          state.wallet,
-        ]);
+
       default:
         return false;
     }
   }
-
 }
+
 
 @riverpod
 Future<bool> getUserByEmail(GetUserByEmailRef ref) async {
@@ -230,33 +295,35 @@ Future<bool> getUserByEmail(GetUserByEmailRef ref) async {
 }
 
 @riverpod
-Future<String> createUserSeller(CreateUserSellerRef ref) async {
-  await Future.delayed(const Duration(seconds: 2));
-
-  /*final isSaves = await AuthService().createUserSeller({
-    "email": "B.3KFS3K9RE5mi7XwO-Gg@4b.Act1-H9cV8BTmJCNuLGwqFVgPuQzqMraZ4746gDTV0LshdvUM0p.ppinIwsNTckdpYwnHzYVN2vlEpxyjgR82cb8NN2Hb3BO.Cw",
-    "password": "(]_woLhvm*H@Ke8^{tGj0[6U)g|",
-    "name": "string",
-    "firstLastName": "string",
-    "secondLastName": "string",
-    "bussinessName": "string",
-    "description": "string",
-    "wallet": "string",
+Future<bool> createUserSeller(CreateUserSellerRef ref) async {
+  final user = ref.watch(userSellerStateProvider);
+  final payload = {
+    "email": user.email.value,
+    "password": user.password.value,
+    "name": user.name.value,
+    "firstLastName": user.surname.value,
+    "secondLastName": user.lastName.value,
+    "profilePicture": "string",
+    "frontIdentification": "string",
+    "backIdentification": "string",
+    "bussinessName": user.businessName.value,
+    "description": user.description.value,
+    "wallet": user.wallet.value,
     "address": {
-      "id": 0,
-      "country": "string",
-      "state": "string",
-      "city": "string",
-      "locality": "string",
-      "colony": "string",
-      "street": "string",
-      "zipCode": 0,
-      "externalNumber": "strin",
-      "internalNumber": "strin",
-      "referenceNear": "string",
-      "addressType": "DOMICILIO"
+      "country": user.country.value,
+      "state": user.state.value,
+      "city": user.city.value,
+      "locality": user.locality.value,
+      "colony": user.colony.value,
+      "street": user.street.value,
+      "zipCode": user.zipCode.value,
+      "externalNumber": user.externalNumber.value,
+      "internalNumber": user.internalNumber.value,
+      "referenceNear": user.reference.value,
+      "addressType": addressTypeToString(user.addressType),
     }
-  });*/
-
-  return 'Success';
+  };
+  final authService = ref.read(authServiceProvider);
+  final isSaves = await authService.createUserSeller(payload);
+  return isSaves != 'Error';
 }

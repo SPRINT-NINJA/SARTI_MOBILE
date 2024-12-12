@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:sarti_mobile/config/config.dart';
-import 'dart:convert';
 import 'package:sarti_mobile/models/product/product_model_public.dart';
 
 class ProductService {
