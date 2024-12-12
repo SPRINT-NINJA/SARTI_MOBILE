@@ -12,11 +12,9 @@ class DeliveryOrdersService {
     try {
       final response = await dio.get('/order-delivery/to-take');
 
-      return (response.data['data']['content'] as List)
-          .map((order) => OrderDelivery.fromJson(order))
-          .toList();
+      return (response.data['data']['content'] as List).map((order) => OrderDelivery.fromJson(order)).toList();
     } catch (e) {
-      print('Error getting orders: $e');
+      print('Error gettig orders: $e');
       rethrow;
     }
   }
@@ -64,17 +62,33 @@ class DeliveryOrdersService {
     }
   }
 
-  Future<Map<String, dynamic>> acceptOrder(String orderId) async {
+  Future<bool> acceptOrder(String orderId) async {
     try {
-      final response = await dio.post('/delivery/orders/$orderId/accept');
+      final response = await dio.patch('/order-delivery/take/$orderId');
 
       if (response.statusCode == 200) {
-        return response.data;
+        return response.data['data'];
       }
 
-      return {'error': response.data['error'], 'message': response.data['message']};
+      return false;
     } catch (e) {
       print('Error accepting order: $e');
+      rethrow;
+    }
+  }
+
+  //change status order
+  Future<bool> changeStatusOrder(String orderId, String status) async {
+    try {
+      final response = await dio.patch('/order-delivery/change-step/$orderId', queryParameters: {'step': status});
+
+      if (response.statusCode == 200) {
+        return response.data['data'];
+      }
+
+      return false;
+    } catch (e) {
+      print('Error changing status order: $e');
       rethrow;
     }
   }
