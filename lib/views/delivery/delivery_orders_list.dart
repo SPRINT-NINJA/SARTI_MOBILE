@@ -144,7 +144,6 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                       Row(
                         children: [
                           //image from url on order
-                          Image.asset('assets/delivery/peding_delivery.png', height: 50),
                           SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -154,14 +153,51 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                                   'Pedido #${_orders[index].orderNumber}',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
-                                Text('Calle: ${_orders[index].address.street}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Número: ${_orders[index].address.externalNumber}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Colonia: ${_orders[index].address.colony}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Municipio: ${_orders[index].address.city}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Estado: ${_orders[index].address.state}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Código Postal: ${_orders[index].address.zipCode}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Referencia: ${_orders[index].address.referenceNear}', style: TextStyle(color: Colors.grey[600])),
-                                Text('ToTAL: \$${_orders[index].sartiOrder.total}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Estado: ${_orders[index].orderDeliveryStep}'),
+                                Text('Cliente: ${_orders[index].sartiOrder?.customer?.name} ${_orders[index].sartiOrder?.customer?.firstLastName}'),
+                                Text('Dirección: ${_orders[index].address?.street} ${_orders[index].address?.externalNumber} ${_orders[index].address?.colony}' ?? ''),
+                                Text('Total: \$${_orders[index].sartiOrder?.total}'),
+
+                                //show the products on orders.sartiOrder.productsOrder.products
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Productos:",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: _orders[index].sartiOrder?.productOrders?.length ?? 0,
+                                  itemBuilder: (context, productIndex) {
+                                    final product = _orders[index].sartiOrder?.productOrders?[productIndex];
+
+                                    return Card(
+                                      child: ListTile(
+                                        leading: Image.network(
+                                          product?.product?.mainImage ?? '',
+                                          fit: BoxFit.cover,
+                                          width: 50,
+                                          height: 50,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Icon(Icons.broken_image, size: 50); // Placeholder on error
+                                          },
+                                        ),
+                                        title: Text(product?.product?.name ?? 'Producto desconocido'),
+                                        subtitle: Text('Precio: \$${product?.product?.price ?? 0}'),
+                                        trailing: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text('Cantidad: ${product?.amount ?? 0}'),
+                                            Text('Total: \$${product?.total ?? 0}'),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -173,7 +209,10 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                           onPressed: () {
                             showDialog(
                               context: context, 
-                              builder: (context) => AcceptOrderModal(),
+                              builder: (context) => AcceptOrderModal(
+                                orderId: _orders[index].id,
+                              ),
+
                             );
                           },
                           child: Text('Aceptar pedido'),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
+import 'package:sarti_mobile/views/delivery/delivery_order_taken.dart';
 import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'package:sarti_mobile/views/views.dart';
 
@@ -107,7 +108,6 @@ final appRouter = GoRouter(
         builder: (BuildContext context, GoRouterState state) =>
             DeliveryOrdersList()
     ),
-
 
     GoRoute(
       path: '/shopping-cart',

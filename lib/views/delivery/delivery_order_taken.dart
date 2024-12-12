@@ -102,7 +102,6 @@ class _DeliveryOrderTakenState extends State<DeliveryOrderTaken> {
                       Row(
                         children: [
                           //image from url on order
-                          Image.asset('assets/delivery/peding_delivery.png', height: 50),
                           SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -112,14 +111,52 @@ class _DeliveryOrderTakenState extends State<DeliveryOrderTaken> {
                                   'Pedido #${_takedOrders[index].orderNumber}',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
-                                Text('Calle: ${_takedOrders[index].address.street}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Número: ${_takedOrders[index].address.externalNumber}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Colonia: ${_takedOrders[index].address.colony}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Municipio: ${_takedOrders[index].address.city}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Estado: ${_takedOrders[index].address.state}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Código Postal: ${_takedOrders[index].address.zipCode}', style: TextStyle(color: Colors.grey[600])),
-                                Text('Referencia: ${_takedOrders[index].address.referenceNear}', style: TextStyle(color: Colors.grey[600])),
-                                Text('ToTAL: \$${_takedOrders[index].sartiOrder.total}', style: TextStyle(color: Colors.grey[600])),
+                                Text('Cliente: ${_takedOrders[index].sartiOrder?.customer?.name} ${_takedOrders[index].sartiOrder?.customer?.firstLastName}'),
+                                Text('Dirección: ${_takedOrders[index].address?.street} ${_takedOrders[index].address?.externalNumber} ${_takedOrders[index].address?.colony}' ?? ''),
+                                Text('Referencias: ${_takedOrders[index].address?.referenceNear}' ?? ''),
+                                Text('Tipo de dirección: ${_takedOrders[index].address?.addressType}' ?? ''),
+                                Text('Repartidor: ${_takedOrders[index].deliveryMan?.name} ${_takedOrders[index].deliveryMan?.firstLastName}'),
+
+                                //show the products on orders.sartiOrder.productsOrder.products
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Productos:",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: _takedOrders[index].sartiOrder?.productOrders?.length ?? 0,
+                                  itemBuilder: (context, productIndex) {
+                                    final product = _takedOrders[index].sartiOrder?.productOrders?[productIndex];
+
+                                    return Card(
+                                      child: ListTile(
+                                        leading: Image.network(
+                                          product?.product?.mainImage ?? '',
+                                          fit: BoxFit.cover,
+                                          width: 50,
+                                          height: 50,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Icon(Icons.broken_image, size: 50); // Placeholder on error
+                                          },
+                                        ),
+                                        title: Text(product?.product?.name ?? 'Producto desconocido'),
+                                        subtitle: Text('Precio: \$${product?.product?.price ?? 0}'),
+                                        trailing: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text('Cantidad: ${product?.amount ?? 0}'),
+                                            Text('Total: \$${product?.total ?? 0}'),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -128,13 +165,32 @@ class _DeliveryOrderTakenState extends State<DeliveryOrderTaken> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AcceptOrderModal(),
-                            );
+                          onPressed: () async {
+                            //parse id to string
+                            var orderId = _takedOrders[index].id.toString();
+
+                            var step = _takedOrders[index].orderDeliveryStep == 'Enviado' ? 'ENTREGADO' : 'ENVIADO';
+                            final result = await _deliveryOrdersService.changeStatusOrder(orderId, step);
+                            if (result) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Estado del pedido cambiado'),
+                                  backgroundColor: AppColors.primaryColor,
+                                ),
+                              );
+                              // Refresh orders
+                              _fetchOrders();
+                            }else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error al cambiar el estado del pedido'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+
                           },
-                          child: Text('Aceptar pedido'),
+                          child: Text( _takedOrders[index].orderDeliveryStep == 'Enviado' ? 'Terminar pedido' : 'Comezar entrega'),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: AppColors.primaryColor,
