@@ -101,6 +101,7 @@ class TopRatedScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ProductDetailScreen(
+                                    id: product.id.toString(),
                                     title: product.name,
                                     imageUrl: product.mainImage,
                                     price: product.price,
