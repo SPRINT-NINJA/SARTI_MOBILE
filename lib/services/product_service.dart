@@ -152,4 +152,17 @@ class ProductService {
       throw Exception('Error al eliminar producto: $e');
     }
   }
+
+  Future<void> changeProductStatus(int productId) async {
+    try {
+      final response = await dio.patch('/product/$productId');
+
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Error al cambiar el estado: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error al cambiar el estado: $e');
+    }
+  }
 }
