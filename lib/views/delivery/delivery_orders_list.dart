@@ -216,7 +216,7 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
                               builder: (context) => AcceptOrderModal(orderId: _orders[index].id),
                             ).then((result) {
                               if (result == true) {
-                                _fetchOrders();
+                                context.pushNamed(DeliveryOrderTaken.name);
                               }
                             });
                           },

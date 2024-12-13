@@ -40,4 +40,25 @@ class ProductService {
     }
   }
 
+  //add product to cart
+
+  Future<bool> addProductToCart(String productId) async {
+    try {
+      final response = await dio.post(
+        '/cart',
+        queryParameters: {
+          'productId': productId,
+          'quantity': 1,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
 }

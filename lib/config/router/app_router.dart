@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/viewmodels/auth/auth_provider.dart';
+import 'package:sarti_mobile/views/customer/customer_orders_list.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
@@ -86,6 +87,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             ShoppingCartScreen(),
       ),
 
+      GoRoute(path: '/customer-orders',
+          name: CustomerOrdersList.name,
+          builder: (BuildContext context, GoRouterState state) =>
+              CustomerOrdersList()
+      ),
       // Rutas de autenticación
       GoRoute(
         path: '/auth',

@@ -1,36 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:sarti_mobile/models/orders/delivery_orders_model.dart';
+import 'package:sarti_mobile/services/order-customers/customer_order_service.dart';
 import 'package:sarti_mobile/views/customer/customer_orders_details.dart';
 import 'package:sarti_mobile/views/customer/review_product_costumer.dart';
 
 class CustomerOrdersList extends StatelessWidget {
+  static const name = 'customer-orders-list';
+  CustomerOrdersList({Key? key}) : super(key: key);
+  final CustomerOrderService customerOrderService = CustomerOrderService();
+
   @override
   Widget build(BuildContext context) {
-    // Lista de pedidos simulada
-    final orders = [
-      {
-        'date': '15 de octubre del 2024',
-        'imagePath': 'assets/logo/ICON-SARTI.png',
-        'productName': 'Paquete de Cake-Topper con cupcakes',
-        'quantity': '1 Unidad',
-        'status': 'Pendiente',
-      },
-      {
-        'date': '12 de octubre del 2024',
-        'imagePath': 'assets/logo/ICON-SARTI.png',
-        'productName': 'Set de Decoración de Pasteles',
-        'quantity': '2 Unidades',
-        'status': 'Entregado',
-      },
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            // Acción del menú
-          },
-        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -58,11 +40,24 @@ class CustomerOrdersList extends StatelessWidget {
           _buildFeedbackCard(context),
           const SizedBox(height: 8),
           Expanded(
-            child: ListView.builder(
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                final order = orders[index];
-                return _buildOrderCard(context, order);
+            child: FutureBuilder<List<OrderDelivery>>(
+              future: customerOrderService.getOrders('', '', ''), // Fetch orders from the service
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No hay pedidos disponibles.'));
+                }
+                final orders = snapshot.data!;
+                return ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
+                    return _buildOrderCard(context, order);
+                  },
+                );
               },
             ),
           ),
@@ -76,6 +71,7 @@ class CustomerOrdersList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
+          /*
           Expanded(
             child: TextField(
               decoration: InputDecoration(
@@ -91,6 +87,7 @@ class CustomerOrdersList extends StatelessWidget {
               },
             ),
           ),
+          */
         ],
       ),
     );
@@ -107,6 +104,7 @@ class CustomerOrdersList extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
+            /*
             Image.asset(
               'assets/delivery/successful_delivery.png',
               width: 50,
@@ -137,15 +135,15 @@ class CustomerOrdersList extends StatelessWidget {
                 'Dar tu opinión',
                 style: TextStyle(color: Colors.blue),
               ),
-            ),
+            ),*/
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOrderCard(BuildContext context, Map<String, String> order) {
-    final statusColor = order['status'] == 'Pendiente' ? Colors.red : Colors.green;
+  Widget _buildOrderCard(BuildContext context, OrderDelivery order) {
+    final statusColor = order.status == 'Pendiente' ? Colors.red : Colors.green;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -155,89 +153,69 @@ class CustomerOrdersList extends StatelessWidget {
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Row(
+        //show basical info from orders and the products
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              order['imagePath']!,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    order['date']!,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+            Row(
+              children: [
+                Text(
+                  'Pedido #${order.id}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                  Text(
-                    order['productName']!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                ),
+                const Spacer(),
+                Text(
+                  order.orderDeliveryStep ?? '',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: statusColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('Fecha: ${order.createdAt}'),
+            //customer and address
+            const SizedBox(height: 8),
+            Text('Cliente: ${order.sartiOrder?.customer?.name}'),
+            const SizedBox(height: 8),
+            Text('Dirección: ${order.address?.locality} ${order.address?.street} ${order.address?.externalNumber}'),
+            const SizedBox(height: 8),
+            Text('Total: \$${order.sartiOrder?.total.toStringAsFixed(2)}'),
+            const SizedBox(height: 8),
+            Text('Productos:'),
+            const SizedBox(height: 8),
+            for (final product in order.sartiOrder?.productOrders ?? [])
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      product.product?.name ?? '',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                   Text(
-                    order['quantity']!,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    '${product.amount}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          order['status']!,
-                          style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(width: 30),
-                      Flexible(
-                        child: TextButton(
-                          onPressed: () {
-                            print("Volver a comprar");
-                          },
-                          child: const Text(
-                            'Volver a comprar',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CustomerOrdersDetails(
-                                  purchaseData: {
-                                    'date': order['date']!,
-                                    'imagePath': order['imagePath']!,
-                                    'productName': order['productName']!,
-                                    'price': '250',
-                                    'total': '250',
-                                    'orderNumber': '15',
-                                    'deliveryType': 'Envío',
-                                    'quantity': order['quantity']!,
-                                    'status': order['status']!,
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'Ver compra',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ),
-                    ],
+                  //amount
+                  Text(
+                    ' x \$${product.product?.price.toStringAsFixed(2)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  //total final
+                  Text(
+                    ' == \$${(product.total).toStringAsFixed(2)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-            ),
+            const SizedBox(height: 8),
           ],
+
         ),
       ),
     );

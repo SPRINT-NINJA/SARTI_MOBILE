@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/services/product/product_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 
 class ProductDetailScreen extends StatelessWidget {
+  final String id;
   final String title;
   final String imageUrl;
   final double price;
@@ -10,12 +15,68 @@ class ProductDetailScreen extends StatelessWidget {
 
   const ProductDetailScreen({
     Key? key,
+    required this.id,
     required this.title,
     required this.imageUrl,
     required this.price,
     required this.description,
     this.additionalImages = const [],
   }) : super(key: key);
+
+  Future<void> _handlePurchase(BuildContext context) async {
+    ProductService productService = ProductService();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final userRole = prefs.getString('role');
+
+    if (token == null) {
+      _showAlertDialog(
+        context,
+        'Error',
+        'Debes iniciar sesión para realizar una compra.',
+      );
+      return;
+    }
+
+    if (userRole != 'COMPRADOR') {
+      _showAlertDialog(
+        context,
+        'Acceso denegado',
+        'Solo los usuarios con el rol de "COMPRADOR" pueden realizar compras.',
+      );
+      return;
+    }
+
+    var response = await productService.addProductToCart(id);
+    if (response) {
+      context.pushNamed(ShoppingCartScreen.name);
+    } else {
+      _showAlertDialog(
+        context,
+        'Error',
+        'Por favor verifique su cuenta antes de realizar una compra y no agregue productos de diferentes vendedores al carrito.',
+      );
+    }
+  }
+
+
+  void _showAlertDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +92,7 @@ class ProductDetailScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {
-              // Navega al carrito
-            },
-          ),
-        ],
+        actions: [],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -114,9 +168,7 @@ class ProductDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Acción para comprar
-                  },
+                  onPressed: () => _handlePurchase(context),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
