@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
+import 'package:sarti_mobile/views/delivery/delivery_order_taken.dart';
 import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'package:sarti_mobile/views/views.dart';
 
@@ -53,7 +54,7 @@ final appRouter = GoRouter(
           PasswordLoginScreen(userEmail: '', userName: ''),
     ),
     GoRoute(
-      path: '/product-detail',
+      path: '/product/{id}',
       builder: (BuildContext context, GoRouterState state) =>
           const ProductDetailScreen(
         imageUrl: '',
@@ -63,7 +64,7 @@ final appRouter = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/product-list',
+      path: '/product',
       builder: (BuildContext context, GoRouterState state) =>
           ProductListScreen(),
     ),
@@ -73,9 +74,8 @@ final appRouter = GoRouter(
           const RecoveryPasswordView(userEmail: ''),
     ),
     GoRoute(
-      path: '/top-rated',
-      name: ProductosScreen.name,
-      builder: (BuildContext context, GoRouterState state) => ProductosScreen(),
+      path: '/rate',
+      builder: (BuildContext context, GoRouterState state) => TopRatedScreen(),
     ),
     GoRoute(
       path: '/validte-email',

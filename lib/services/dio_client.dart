@@ -6,7 +6,7 @@ class DioClient {
   late Dio _dio;
 
   DioClient() {
-    final baseUrl = dotenv.env['BASE_URL'] ?? "http://localhost:8080/api/sarti";
+    final baseUrl = dotenv.env['BASE_URL'] ?? "http://18.204.251.12:8081/api/sarti";
 
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,

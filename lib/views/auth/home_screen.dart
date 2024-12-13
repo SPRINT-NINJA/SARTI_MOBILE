@@ -112,7 +112,12 @@ class HomeScreen extends StatelessWidget {
                                 title: 'Mejores calificados',
                                 theme: theme,
                                 onTap: () {
-                                  context.pushNamed(ProductosScreen.name);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TopRatedScreen(),
+                                    ),
+                                  );
                                 },
                               ),
                             ],

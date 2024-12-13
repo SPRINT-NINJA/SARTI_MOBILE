@@ -51,17 +51,88 @@ class _DeliveryOrderHistorialState extends State<DeliveryOrderHistorial> {
   }
 
   Widget _OrdersList() {
-    return ListView.builder(
+    return
+      ListView.builder(
       itemCount: _takedOrders.length,
       itemBuilder: (context, index) {
-        final order = _takedOrders[index];
-        return ListTile(
-          title: Text(order.orderNumber),
-          subtitle: Text(order.status as String),
-          onTap: () {
-            // Navigate to order detail
-          },
+        return Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: EdgeInsets.symmetric(vertical: 8.0),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    //image from url on order
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Pedido #${_takedOrders[index].orderNumber}',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text('Estado: ${_takedOrders[index].orderDeliveryStep}'),
+                          Text('Cliente: ${_takedOrders[index].sartiOrder?.customer?.name} ${_takedOrders[index].sartiOrder?.customer?.firstLastName}'),
+                          Text('Dirección: ${_takedOrders[index].address?.street} ${_takedOrders[index].address?.externalNumber} ${_takedOrders[index].address?.colony}' ?? ''),
+                          Text('Total: \$${_takedOrders[index].sartiOrder?.total}'),
+
+                          //show the products on orders.sartiOrder.productsOrder.products
+                          const SizedBox(height: 8),
+                          Text(
+                            "Productos:",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: _takedOrders[index].sartiOrder?.productOrders?.length ?? 0,
+                            itemBuilder: (context, productIndex) {
+                              final product = _takedOrders[index].sartiOrder?.productOrders?[productIndex];
+
+                              return Card(
+                                child: ListTile(
+                                  leading: Image.network(
+                                    product?.product?.mainImage ?? '',
+                                    fit: BoxFit.cover,
+                                    width: 50,
+                                    height: 50,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.broken_image, size: 50); // Placeholder on error
+                                    },
+                                  ),
+                                  title: Text(product?.product?.name ?? 'Producto desconocido'),
+                                  subtitle: Text('Precio: \$${product?.product?.price ?? 0}'),
+                                  trailing: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text('Cantidad: ${product?.amount ?? 0}'),
+                                      Text('Total: \$${product?.total ?? 0}'),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
+
       },
     );
   }
