@@ -11,6 +11,7 @@ import 'package:sarti_mobile/views/views.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final role = ref.watch(authProvider).authStatus;
+  final type = ref.watch(authProvider).user?.role;
 
   return GoRouter(
     initialLocation: '/',
@@ -45,7 +46,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           imageUrl: '',
           title: '',
           price: 0,
-          description: '',
+          description: '', id: '',
         ),
       ),
       GoRoute(
@@ -160,6 +161,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       }
 
       if (role == AuthStatus.authenticated) {
+        if(type == 'REPARTIDOR'){
+          if (isGoingTo == '/') {
+            return '/home-delivery'; // Si está autenticado, redirige al home
+          }
+          return null; // Si ya está en una ruta que puede acceder, no redirige
+        }
         if (isGoingTo == '/') {
           return '/home'; // Si está autenticado, redirige al home
         }

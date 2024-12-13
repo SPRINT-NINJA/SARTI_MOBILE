@@ -200,6 +200,7 @@ class _CardsState extends ConsumerState<_Cards> {
                      context,
                      MaterialPageRoute(
                        builder: (context) => ProductDetailScreen(
+                         id:  '',
                          title: product.name,
                          imageUrl: product.mainImage,
                          price: product.price,

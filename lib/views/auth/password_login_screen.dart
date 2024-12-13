@@ -119,7 +119,7 @@ class _PasswordLoginScreenState extends ConsumerState<PasswordLoginScreen> {
                           const SnackBar(content: Text('Inicio de sesión exitoso')),
                         );
 
-                        switch (user?.role) {
+                        switch (user.role) {
                           case 'COMPRADOR':
                             context.pushNamed(HomeScreen.name);
                             break;
