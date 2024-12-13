@@ -3,10 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_taken.dart';
 import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
+import 'package:sarti_mobile/views/seller/sellers_list_view.dart';
 import 'package:sarti_mobile/views/views.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/home',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -14,6 +15,17 @@ final appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           const WelcomeView(),
     ),
+
+    GoRoute(
+        path: '/sellers/list',
+        builder: (BuildContext context, GoRouterState state) {
+          return SellersListView();
+        }),
+    GoRoute(
+        path: '/rated/top',
+        builder: (BuildContext context, GoRouterState state) {
+          return TopRatedScreen();
+        }),
 
     //create account [delivery, customer, seller]
     GoRoute(
@@ -75,8 +87,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/rate',
-      builder: (BuildContext context, GoRouterState state) =>
-          TopRatedScreen(),
+      builder: (BuildContext context, GoRouterState state) => TopRatedScreen(),
     ),
     GoRoute(
       path: '/validte-email',

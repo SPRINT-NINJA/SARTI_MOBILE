@@ -1,6 +1,8 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dio/dio.dart';
 import 'package:sarti_mobile/config/config.dart';
+import 'package:sarti_mobile/mappers/user_mapper.dart';
+import 'package:sarti_mobile/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
@@ -39,7 +41,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> login(String email, String password) async {
+  Future<User?> login(String email, String password) async {
     try {
       var response = await dio.post(
         '/auth/sign-in',
@@ -48,13 +50,12 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final token = response.data['data'];
-        final jwt = _decodeToken(token);
+        final User user = UserMapper.fromToken(token);
         await _saveUserSession(token);
-        return {'error': response.data['error'], 'role': jwt.payload['role'][0]['authority']};
+        return user;
       }
 
-      return {'error': response.data['error'], 'message': response.data['message']};
-
+      return null;
     } catch (e) {
       print('Error logging in: $e');
       rethrow;

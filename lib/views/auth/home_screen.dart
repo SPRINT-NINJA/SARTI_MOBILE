@@ -10,6 +10,7 @@ import 'package:sarti_mobile/views/auth/top_rated.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:sarti_mobile/views/seller/sellers_list_view.dart';
 import 'package:sarti_mobile/views/views.dart';
+import 'package:sarti_mobile/widgets/shared/side_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importar la vista de emprendedores
 
 class HomeScreen extends StatelessWidget {
@@ -21,6 +22,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final AuthService _authService = AuthService();
+    final scaffoldKey = GlobalKey<ScaffoldState>();
+
 
     return FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),
@@ -30,10 +33,10 @@ class HomeScreen extends StatelessWidget {
           return ChangeNotifierProvider(
             create: (_) => ProductViewModel()..fetchProducts(),
             child: Scaffold(
+              drawer: SideMenu( scaffoldKey: scaffoldKey ),
               appBar: AppBar(
                 backgroundColor: theme.primaryColor,
                 elevation: 0,
-                automaticallyImplyLeading: prefs?.getString('token') == null,
                 actions: [
                   if (prefs?.getString('token') != null)
                     IconButton(
@@ -71,22 +74,18 @@ class HomeScreen extends StatelessWidget {
                         // Header
                         Container(
                           padding: const EdgeInsets.all(16.0),
-                          color: theme.primaryColor,
-                          child: const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Los mejores productos están aquí',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
+                          width: double.infinity,
+                          child: Text(
+                            'Los mejores productos están aquí',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: theme.primaryColor,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 10),
 
                         // Cards de botones
                         Padding(

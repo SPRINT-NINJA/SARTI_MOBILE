@@ -27,3 +27,22 @@ String addressTypeToString(AddressType addressType) {
   }
 }
 
+const Map<role, String> roleMap = {
+  role.delivery: 'REPARTIDOR',
+  role.customer: 'COMPRADOR',
+  role.seller: 'EMPRENDEDOR',
+};
+
+enum role { delivery, customer, seller }
+
+role? getRoleFromString(String roleString) {
+  try {
+    return roleMap.entries.firstWhere((entry) => entry.value == roleString).key;
+  } catch (e) {
+    return null;
+  }
+}
+String getRoleString(role role) {
+  return roleMap[role] ?? 'COMPRADOR';
+}
+

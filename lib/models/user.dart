@@ -26,6 +26,34 @@ class User {
     required this.updatedAt,
   });
 
+  User copyWith({
+    int? id,
+    String? email,
+    String? password,
+    String? token,
+    String? role,
+    bool? blocked,
+    bool? status,
+    bool? verified,
+    String? lastAccess,
+    String? createdAt,
+    String? updatedAt,
+  }) {
+    return User(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      token: token ?? this.token,
+      role: role ?? this.role,
+      blocked: blocked ?? this.blocked,
+      status: status ?? this.status,
+      verified: verified ?? this.verified,
+      lastAccess: lastAccess ?? this.lastAccess,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],

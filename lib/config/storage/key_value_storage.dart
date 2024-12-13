@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyValueStorage {
@@ -54,4 +55,11 @@ class KeyValueStorage {
     final prefs = await getSharedPreferences();
     return await prefs.remove(key);
   }
+}
+
+
+//decode jwt token
+JWT decodeToken(String token) {
+  final jwt = JWT.decode(token);
+  return jwt;
 }
