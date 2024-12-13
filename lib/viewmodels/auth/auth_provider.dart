@@ -3,13 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sarti_mobile/config/config.dart';
+import 'package:sarti_mobile/config/storage/key_value_storage.dart';
+import 'package:sarti_mobile/mappers/user_mapper.dart';
+import 'package:sarti_mobile/models/user.dart';
 import 'package:sarti_mobile/services/user_delivery_service.dart';
 import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_seller_state.dart';
 import 'package:sarti_mobile/viewmodels/auth/create_account/states/steps_form.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
 
 part 'auth_provider.g.dart';
-
 
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService();
@@ -279,7 +281,6 @@ class UserSellerState extends _$UserSellerState {
   }
 }
 
-
 @riverpod
 Future<bool> getUserByEmail(GetUserByEmailRef ref) async {
   await Future.delayed(const Duration(seconds: 2));
@@ -326,4 +327,99 @@ Future<bool> createUserSeller(CreateUserSellerRef ref) async {
   final authService = ref.read(authServiceProvider);
   final isSaves = await authService.createUserSeller(payload);
   return isSaves != 'Error';
+}
+
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+  final authService = ref.watch(authServiceProvider);
+  final keyValueStorageService = KeyValueStorage();
+  return AuthNotifier(
+      authService: authService, keyValueStorageService: keyValueStorageService);
+});
+
+class AuthNotifier extends StateNotifier<AuthState> {
+  final AuthService authService;
+  final KeyValueStorage keyValueStorageService;
+
+  AuthNotifier(
+      {required this.authService, required this.keyValueStorageService})
+      : super(AuthState()) {
+    checkAuthStatus();
+  }
+
+/*  Future<void> loginUser( String email, String password ) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    try {
+      final user = await authService.login(email, password);
+      _setLoggedUser( user );
+
+    } on CustomError catch (e) {
+      logout( e.message );
+    } catch (e){
+      logout( 'Error no controlado' );
+    }
+
+    // final user = await authRepository.login(email, password);
+    // state =state.copyWith(user: user, authStatus: AuthStatus.authenticated)
+
+  }*/
+
+  void registerUser(String email, String password) async {}
+
+  void checkAuthStatus() async {
+    final token = await keyValueStorageService.read<String>('token');
+    if (token == null) return logout();
+
+    try {
+      final user = await UserMapper.fromToken(token);
+      if (user == null) return logout();
+
+      setLoggedUser(user);
+    } catch (e) {
+      logout();
+    }
+  }
+
+  void setLoggedUser(User user) async {
+    await keyValueStorageService.write('token', user.token);
+
+    state = state.copyWith(
+      user: user,
+      authStatus: AuthStatus.authenticated,
+      errorMessage: '',
+    );
+  }
+
+
+  Future<void> logout([String? errorMessage]) async {
+    await keyValueStorageService.delete('token');
+
+    state = state.copyWith(
+        authStatus: AuthStatus.notAuthenticated,
+        user: null,
+        errorMessage: errorMessage);
+  }
+}
+
+enum AuthStatus { checking, authenticated, notAuthenticated }
+
+class AuthState {
+  final AuthStatus authStatus;
+  final User? user;
+  final String errorMessage;
+
+  AuthState(
+      {this.authStatus = AuthStatus.checking,
+      this.user,
+      this.errorMessage = ''});
+
+  AuthState copyWith({
+    AuthStatus? authStatus,
+    User? user,
+    String? errorMessage,
+  }) =>
+      AuthState(
+          authStatus: authStatus ?? this.authStatus,
+          user: user ?? this.user,
+          errorMessage: errorMessage ?? this.errorMessage);
 }

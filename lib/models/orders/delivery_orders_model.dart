@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import '../sellers/seller_model.dart';
-
 class OrderDelivery {
   final int id;
   final String? orderNumber;

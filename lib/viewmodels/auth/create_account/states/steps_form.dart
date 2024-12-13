@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/config/config.dart';
 
 class StepsForm {
   final int currentStep;

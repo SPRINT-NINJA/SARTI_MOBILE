@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sarti_mobile/viewmodels/sellers/seller_viewmodel.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
-import 'package:sarti_mobile/views/auth/product_list_screen.dart';
-import 'package:sarti_mobile/views/auth/home_screen.dart';
 import 'package:sarti_mobile/views/seller/sellers_products_list_view.dart'; // Importa la HomeScreen
 
 class SellersListView extends StatelessWidget {
@@ -13,23 +11,6 @@ class SellersListView extends StatelessWidget {
       create: (_) => SellersViewModel()..loadSellers(),
       child: Scaffold(
         appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              // Navega a HomeScreen al presionar el ícono de SARTI
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/logo/ICON-SARTI.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
-          ),
           backgroundColor: AppColors.primaryColor,
         ),
         body: Column(

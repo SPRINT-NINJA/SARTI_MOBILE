@@ -1,10 +1,3 @@
-enum ERoles {
-  delivery,
-  costumer,
-  business,
-}
-
-
 enum FormStatus { invalid, valid, validating, submitting, submitted, posting }
 
 
@@ -25,5 +18,25 @@ String addressTypeToString(AddressType addressType) {
     default:
       return 'Domicilio';
   }
+}
+
+const Map<Role, String> roleMap = {
+  Role.delivery: 'REPARTIDOR',
+  Role.customer: 'COMPRADOR',
+  Role.seller: 'EMPRENDEDOR',
+  Role.public: 'PUBLICO',
+};
+
+enum Role { delivery, customer, seller, public }
+
+Role? getRoleFromString(String roleString) {
+  try {
+    return roleMap.entries.firstWhere((entry) => entry.value == roleString).key;
+  } catch (e) {
+    return null;
+  }
+}
+String getRoleString(Role role) {
+  return roleMap[role] ?? 'COMPRADOR';
 }
 

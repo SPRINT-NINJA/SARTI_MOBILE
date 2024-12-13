@@ -1,8 +1,6 @@
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dio/dio.dart';
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/orders/delivery_orders_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DeliveryOrdersService {
   late final Dio dio;

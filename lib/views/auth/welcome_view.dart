@@ -9,7 +9,7 @@ import 'package:sarti_mobile/widgets/auth/button_fill_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeView extends StatelessWidget {
-  static const name = 'welcome';
+  static const  name = 'welcome';
   const WelcomeView({super.key});
 
 

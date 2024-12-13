@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sarti_mobile/models/user.dart';
+import 'package:sarti_mobile/viewmodels/auth/auth_provider.dart';
 import 'package:sarti_mobile/views/auth/home_screen.dart';
 import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'validate_email_view.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
 
-class PasswordLoginScreen extends StatefulWidget {
+class PasswordLoginScreen extends ConsumerStatefulWidget {
   static const name = 'login-pwd';
 
   final String userEmail;
@@ -18,7 +21,7 @@ class PasswordLoginScreen extends StatefulWidget {
   _PasswordLoginScreenState createState() => _PasswordLoginScreenState();
 }
 
-class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
+class _PasswordLoginScreenState extends ConsumerState<PasswordLoginScreen> {
   final AuthService _authService = AuthService();
   final TextEditingController passwordController = TextEditingController();
   bool _obscureText = true; // Controla la visibilidad de la contraseña
@@ -32,7 +35,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(
+            const Text(
               'Ingresa tu contraseña de SARTI',
               style: TextStyle(
                 fontSize: 20,
@@ -40,9 +43,9 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 color: Colors.orange[300],
                 borderRadius: BorderRadius.circular(10),
@@ -54,21 +57,21 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                         AssetImage('assets/images/user_profile.png'),
                     radius: 20,
                   ),*/
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(
                     widget.userName,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: passwordController,
               obscureText: _obscureText,
               decoration: InputDecoration(
                 labelText: 'Contraseña',
-                border: UnderlineInputBorder(),
+                border: const UnderlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility_off : Icons.visibility,
@@ -82,7 +85,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 40), // Espacio antes del botón
+            const SizedBox(height: 40), // Espacio antes del botón
             Align(
               alignment: Alignment.center,
               child: SizedBox(
@@ -92,8 +95,8 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                     foregroundColor: Colors.white,
                     backgroundColor: AppColors.primaryColor,
                     textStyle:
-                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                        const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   onPressed: () async {
                     final email = widget.userEmail;
@@ -101,7 +104,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
 
                     if (password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text("La contraseña es obligatoria."),
                         ),
                       );
@@ -109,12 +112,14 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                     }
 
                     try {
-                      final response = await _authService.login(email, password);
-                      if (response['error'] != true) {
+                      final user = await _authService.login(email, password);
+                      if (user != null) {
+                        ref.read(authProvider.notifier).setLoggedUser(user);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Inicio de sesión exitoso')),
+                          const SnackBar(content: Text('Inicio de sesión exitoso')),
                         );
-                        switch (response['role']) {
+
+                        switch (user.role) {
                           case 'COMPRADOR':
                             context.pushNamed(HomeScreen.name);
                             break;
@@ -129,32 +134,30 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  response['message'] ?? 'Error al iniciar sesión.')),
+                          const SnackBar(content: Text('Datos incorrectos, intenta nuevamente.')),
                         );
                       }
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error al iniciar sesión.')),
+                        const SnackBar(content: Text('Error al minifier sesión.')),
                       );
                     }
                   },
-                  child: Text('Continuar'),
+                  child: const Text('Continuar'),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ValidateEmailView(),
+                    builder: (context) => const ValidateEmailView(),
                   ),
                 );
               },
-              child: Text(
+              child: const Text(
                 '¿Olvidaste tu contraseña?',
                 style: TextStyle(color: Colors.red),
               ),

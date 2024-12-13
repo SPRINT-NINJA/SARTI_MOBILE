@@ -51,6 +51,7 @@ dependencies:
   image_picker: ^1.1.2
   riverpod_annotation: ^2.6.1
   cached_network_image: ^3.4.1
+  flutter_staggered_grid_view: ^0.7.0
 
 
 dev_dependencies:
@@ -89,6 +90,7 @@ flutter:
     - assets/images/logo_sarti_leading_fill.png
     - assets/customer/
     - assets/images/tutorial/
+    - assets/loaders/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
