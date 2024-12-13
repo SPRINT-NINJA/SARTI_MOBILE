@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:sarti_mobile/config/network/dio_config.dart';
-import 'package:sarti_mobile/models/product/product_model_public.dart';
 import 'package:sarti_mobile/models/rate/rate_model.dart';
 
 class RateService {

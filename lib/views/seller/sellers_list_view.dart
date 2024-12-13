@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sarti_mobile/viewmodels/sellers/seller_viewmodel.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
-import 'package:sarti_mobile/views/auth/product_list_screen.dart';
-import 'package:sarti_mobile/views/auth/home_screen.dart';
 import 'package:sarti_mobile/views/seller/sellers_products_list_view.dart'; // Importa la HomeScreen
 
 class SellersListView extends StatelessWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/viewmodels/auth/auth_provider.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
