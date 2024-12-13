@@ -1,19 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:sarti_mobile/models/address.dart';
-import 'package:sarti_mobile/models/sellers/user_seller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SellerProfileView extends StatelessWidget {
-  final UserSeller seller;
-  static const name = 'SellerProfileView';
+import 'package:sarti_mobile/viewmodels/sellers/profile_seller_viewmodel.dart';
 
-  const SellerProfileView({Key? key, required this.seller}) : super(key: key);
+class ProfileSellerView extends ConsumerWidget {
+  static const name = 'profile-seller';
+  const ProfileSellerView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(profileSellerProvider);
+
+    if (state.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (state.error != null) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            state.error!,
+            style: const TextStyle(color: Colors.red),
+          ),
+        ),
+      );
+    }
+
+    final profile = state.profile;
+    if (profile == null) {
+      return const Scaffold(
+        body: Center(child: Text('Perfil no disponible.')),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil del Vendedor'),
-        backgroundColor: Colors.green, // Mantén el color verde
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -21,40 +45,68 @@ class SellerProfileView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage:
-                    AssetImage('assets/images/avatar_placeholder.png'),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[300],
+                    child: Text(
+                      profile.name[0],
+                      style: const TextStyle(fontSize: 40),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '${profile.name} ${profile.fistLastName} ${profile.secondLastName ?? ''}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(profile.user.email),
+                ],
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              '${seller.name} ${seller.firstLastName} ${seller.secondLastName}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            const Text(
+              'Información de la Tienda',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text(
-              seller.email,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-              textAlign: TextAlign.center,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Nombre de la tienda: ${profile.bussinessName}'),
+                    Text('Descripción: ${profile.description}'),
+                    Text('Wallet: ${profile.wallet}'),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 20),
-            const Divider(),
-            const SizedBox(height: 10),
             const Text(
               'Dirección',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text(
-              '${seller.address.street}, ${seller.address.colony}, ${seller.address.city}, ${seller.address.state}, C.P. ${seller.address.zipCode}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Referencia: ${seller.address.referenceNear}',
-              style: const TextStyle(fontSize: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('País: ${profile.address.country}'),
+                    Text('Estado: ${profile.address.state}'),
+                    Text('Ciudad: ${profile.address.city}'),
+                    Text('Colonia: ${profile.address.colony}'),
+                    Text('Calle: ${profile.address.street}'),
+                    Text('Código Postal: ${profile.address.zipCode}'),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

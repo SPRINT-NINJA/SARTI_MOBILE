@@ -20,6 +20,7 @@ class ProductViewModel extends ChangeNotifier {
   String sortDirection = 'asc';
   String searchValue = '';
 
+  /// Método para cargar productos
   Future<void> fetchProducts({bool reset = false}) async {
     if (reset) {
       _products = [];
@@ -51,5 +52,11 @@ class ProductViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    print('ProductViewModel disposed');
+    super.dispose();
   }
 }

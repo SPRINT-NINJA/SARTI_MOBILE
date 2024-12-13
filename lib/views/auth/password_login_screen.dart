@@ -5,6 +5,7 @@ import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'validate_email_view.dart';
 import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/views/seller/seller_profile_view.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   static const name = 'login-pwd';
@@ -119,7 +120,7 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
                             context.pushNamed(HomeScreen.name);
                             break;
                           case 'EMPRENDEDOR':
-                            context.pushNamed(HomeScreen.name);
+                            context.pushNamed(ProfileSellerView.name);
                             break;
                           case 'REPARTIDOR':
                             context.pushNamed(DeliveryOrdersList.name);

@@ -4,6 +4,7 @@ import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_taken.dart';
 import 'package:sarti_mobile/views/delivery/delivery_orders_list.dart';
 import 'package:sarti_mobile/views/views.dart';
+import 'package:sarti_mobile/views/seller/seller_profile_view.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -113,6 +114,10 @@ final appRouter = GoRouter(
       name: ShoppingCartScreen.name,
       builder: (BuildContext context, GoRouterState state) =>
           ShoppingCartScreen(),
-    )
+    ),
+    GoRoute(
+      path: '/profile-seller',
+      builder: (context, state) => const ProfileSellerView(),
+    ),
   ],
 );
