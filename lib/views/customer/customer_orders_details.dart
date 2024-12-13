@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sarti_mobile/models/orders/delivery_orders_model.dart';
 import 'package:sarti_mobile/views/customer/review_product_costumer.dart';
 import 'package:sarti_mobile/widgets/custom_navbar.dart';
 
 class CustomerOrdersDetails extends StatelessWidget {
-  final Map<String, dynamic> purchaseData;
+  final OrderDelivery purchaseData;
 
   CustomerOrdersDetails({required this.purchaseData});
 
@@ -21,77 +22,17 @@ class CustomerOrdersDetails extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      purchaseData['date'],
+                      purchaseData.orderNumber.toString(),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Image.asset(
-                      purchaseData['imagePath'],
-                      height: 150,
-                      width: 150,
-                      fit: BoxFit.cover,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      purchaseData['productName'],
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              buildDetailRow('Producto:', purchaseData['productName']),
-              buildDetailRow('Precio:', '\$${purchaseData['price']}'),
-              buildDetailRow('Total:', '\$${purchaseData['total']}'),
-              buildDetailRow('Número de orden:', '${purchaseData['orderNumber']}'),
-              buildDetailRow('Tipo de entrega:', purchaseData['deliveryType']),
-              buildDetailRow('Cantidad de unidades:', '${purchaseData['quantity']}'),
-              buildDetailRow('Estado:', purchaseData['status']),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(248, 151, 50, 1), 
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), 
-                      ),
-                    ),
-                    onPressed: () {
-                      // Acción de volver a comprar
-                      print('Volver a comprar');
-                    },
-                    child: const Text('Volver a comprar'),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(248, 151, 50, 1), 
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), 
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReviewProductoCustomer(),
-                        ),
-                      );
-                    },
-                    child: const Text('Crear reseña'),
-                  ),
-                ],
-              ),
+
             ],
           ),
         ),

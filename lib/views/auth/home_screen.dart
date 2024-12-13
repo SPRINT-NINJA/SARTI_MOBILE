@@ -7,6 +7,7 @@ import 'package:sarti_mobile/services/auth_service.dart';
 import 'package:sarti_mobile/viewmodels/product/product_viewmodel.dart';
 import 'package:sarti_mobile/views/auth/product_details_screen.dart';
 import 'package:sarti_mobile/views/auth/top_rated.dart';
+import 'package:sarti_mobile/views/customer/customer_orders_list.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
 import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
 import 'package:sarti_mobile/views/views.dart';
@@ -37,22 +38,30 @@ class HomeScreen extends StatelessWidget {
                 elevation: 0,
                 automaticallyImplyLeading: prefs?.getString('token') == null,
                 actions: [
-                  if (prefs?.getString('token') != null)
+                  if (prefs?.getString('token') != null && prefs?.getString('role') == 'COMPRADOR')
                     IconButton(
                       icon: const Icon(Icons.shopping_cart, color: Colors.white),
                       onPressed: () {
-                        // Carrito
                         context.pushNamed(ShoppingCartScreen.name);
                       },
                     ),
+                    //give option to navigate to CustomerOrdersList
+                  if (prefs?.getString('token') != null && prefs?.getString('role') == 'COMPRADOR')
+                    IconButton(
+                      icon: const Icon(Icons.add_box_rounded, color: Colors.white),
+                      onPressed: () {
+                        context.pushNamed(CustomerOrdersList.name);
+                      },
+                    ),
 
-                  IconButton(
-                    icon: const Icon(Icons.logout, color: Colors.white),
-                    onPressed: () {
-                      _authService.logout();
-                      context.pushNamed(WelcomeView.name);
-                    },
-                  ),
+                  if (prefs?.getString('token') != null)
+                    IconButton(
+                      icon: const Icon(Icons.logout, color: Colors.white),
+                      onPressed: () {
+                        _authService.logout();
+                        context.pushNamed(WelcomeView.name);
+                      },
+                    ),
                 ],
               ),
               // ... rest of your Scaffold
@@ -156,6 +165,7 @@ class HomeScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ProductDetailScreen(
+                                      id: product.id.toString(),
                                       title: product.name,
                                       imageUrl: product.mainImage,
                                       price: product.price,
