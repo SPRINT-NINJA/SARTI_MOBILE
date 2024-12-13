@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sarti_mobile/viewmodels/sellers/profile_seller_viewmodel.dart';
+import 'package:sarti_mobile/views/product_list_view.dart';
 
 class ProfileSellerView extends ConsumerWidget {
   static const name = 'profile-seller';
@@ -38,6 +39,19 @@ class ProfileSellerView extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil del Vendedor'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_bag),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductListView(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
