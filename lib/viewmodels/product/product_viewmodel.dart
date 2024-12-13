@@ -15,7 +15,7 @@ class ProductViewModel extends ChangeNotifier {
   String? get error => _error;
 
   int currentPage = 0;
-  int pageSize = 1000;
+  int pageSize = 10; // Cambia según el backend
   String sortField = 'name';
   String sortDirection = 'asc';
   String searchValue = '';
@@ -25,7 +25,6 @@ class ProductViewModel extends ChangeNotifier {
       _products = [];
       currentPage = 0;
     }
-
     _isLoading = true;
     notifyListeners();
 
@@ -44,6 +43,7 @@ class ProductViewModel extends ChangeNotifier {
         _products.addAll(newProducts);
       }
 
+      currentPage++; // Incrementa para la siguiente página
       _error = null;
     } catch (e) {
       _error = e.toString();
@@ -52,4 +52,37 @@ class ProductViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> fetchProductsForSeller({required int sellerId, bool reset = false}) async {
+    if (reset) {
+      _products = [];
+      currentPage = 0;
+    }
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final newProducts = await _productService.fetchProducts(
+        page: currentPage,
+        size: pageSize,
+        sort: sortField,
+        direction: sortDirection,
+        searchValue: searchValue,
+        sellerId: sellerId, // Filtrar por vendedor
+      );
+
+      if (reset) {
+        _products = newProducts;
+      } else {
+        _products.addAll(newProducts);
+      }
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
 }
