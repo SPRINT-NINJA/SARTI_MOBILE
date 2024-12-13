@@ -8,6 +8,7 @@ import 'package:sarti_mobile/views/delivery/delivery_order_historial.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_taken.dart';
 import 'package:sarti_mobile/widgets/delivery/AcceptOrderModal.dart';
 import 'package:sarti_mobile/views/delivery/delivery_order_detail.dart';
+import 'package:sarti_mobile/widgets/shared/side_menu.dart';
 
 import '../auth/welcome_view.dart';
 // import 'package:sarti_mobile/screens/delivery_profile.dart'; // Import de la pantalla de perfil
@@ -28,6 +29,8 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
   List<OrderDelivery> _takedOrders = []; // Store fetched orders
   bool _isLoading = true; // Loading state
   String? _errorMessage; // Error message
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   // View para navegacion
   final List<Widget> _screens = [
@@ -75,29 +78,30 @@ class _DeliveryOrdersListState extends State<DeliveryOrdersList> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+
+
     return Scaffold(
+      drawer: SideMenu( scaffoldKey: scaffoldKey ),
       appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: () {
-              _authService.logout();
-              context.pushNamed(WelcomeView.name);
+          GestureDetector(
+            onTap: () {
+              context.go('/');
             },
+            child: Image.asset(
+              'assets/images/logo_sarti_leading.png',
+              width: size.width * 0.2,
+              height: 40,
+            ),
           ),
         ],
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/logo/ICON-SARTI.png',
-            width: 24,
-            height: 24,
-          ),
-
-        ),
-        backgroundColor: AppColors.primaryColor,
       ),
       body: _selectedIndex == 0 
           ? hasPedidos ? _OrdersList() : _PendingOrder()

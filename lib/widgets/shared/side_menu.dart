@@ -22,9 +22,7 @@ final menuItemsProvider = Provider<List<MenuItem>>((ref) {
 
   if (userRole == Role.delivery) {
     return [
-      MenuItem(label: 'Dashboard', icon: Icons.dashboard, link: '/dashboard'),
-      MenuItem(label: 'Usuarios', icon: Icons.people, link: '/users'),
-      MenuItem(label: 'Configuraciones', icon: Icons.settings, link: '/settings'),
+
     ];
   } else if (userRole == Role.seller) {
     return [
