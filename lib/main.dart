@@ -12,7 +12,6 @@ Future<void> main() async {
   container.read(authProvider.notifier).checkAuthStatus(); // Verificar la sesión
 
 
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -22,9 +21,10 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final goRouter = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
-      routerConfig: appRouter,
+      routerConfig: goRouter,
       debugShowCheckedModeBanner: false,
       theme: AppTheme(selectedColor: 0).theme(),
     );

@@ -4,12 +4,12 @@ import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/config/storage/key_value_storage.dart';
+import 'package:sarti_mobile/mappers/user_mapper.dart';
 import 'package:sarti_mobile/models/user.dart';
 import 'package:sarti_mobile/services/user_delivery_service.dart';
 import 'package:sarti_mobile/viewmodels/auth/create_account/states/create_account_user_seller_state.dart';
 import 'package:sarti_mobile/viewmodels/auth/create_account/states/steps_form.dart';
 import 'package:sarti_mobile/models/inputs/inputs.dart';
-import 'package:sarti_mobile/viewmodels/auth_errors.dart';
 
 part 'auth_provider.g.dart';
 
@@ -371,10 +371,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (token == null) return logout();
 
     try {
-      final user =
-          await authService.getUserByEmail('joelherreraxd10@gmial.com');
+      final user = await UserMapper.fromToken(token);
       if (user == null) return logout();
-      //check if there user
+
       setLoggedUser(user);
     } catch (e) {
       logout();

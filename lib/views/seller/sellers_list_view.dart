@@ -13,23 +13,6 @@ class SellersListView extends StatelessWidget {
       create: (_) => SellersViewModel()..loadSellers(),
       child: Scaffold(
         appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              // Navega a HomeScreen al presionar el ícono de SARTI
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/logo/ICON-SARTI.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
-          ),
           backgroundColor: AppColors.primaryColor,
         ),
         body: Column(

@@ -16,22 +16,22 @@ class MenuItem  {
 final menuItemsProvider = Provider<List<MenuItem>>((ref) {
   // Simula un usuario autenticado
   final state = ref.watch(authProvider);
-  role? userRole = getRoleFromString(state.user!.role);
+  Role? userRole = getRoleFromString(state.user?.role ?? '');
 
   final List<MenuItem> items = [];
 
-  if (userRole == role.delivery) {
+  if (userRole == Role.delivery) {
     return [
       MenuItem(label: 'Dashboard', icon: Icons.dashboard, link: '/dashboard'),
       MenuItem(label: 'Usuarios', icon: Icons.people, link: '/users'),
       MenuItem(label: 'Configuraciones', icon: Icons.settings, link: '/settings'),
     ];
-  } else if (userRole == role.seller) {
+  } else if (userRole == Role.seller) {
     return [
       MenuItem(label: 'Productos', icon: Icons.shopping_bag, link: '/products'),
       MenuItem(label: 'Pedidos', icon: Icons.shopping_cart, link: '/orders'),
     ];
-  }else if (userRole == role.customer) {
+  }else if (userRole == Role.customer) {
     return [
       MenuItem(label: 'Productos', icon: Icons.shopping_bag, link: '/home'),
       MenuItem(label: 'Emprendedores', icon: Icons.shopping_bag, link: '/sellers/list'),
