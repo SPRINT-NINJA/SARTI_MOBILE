@@ -9,12 +9,11 @@ import 'package:sarti_mobile/views/auth/product_details_screen.dart';
 import 'package:sarti_mobile/views/auth/top_rated.dart';
 import 'package:sarti_mobile/views/customer/customer_orders_list.dart';
 import 'package:sarti_mobile/views/customer/shopping_scree.dart';
-import 'package:sarti_mobile/views/sellers/sellers_list_view.dart';
+import 'package:sarti_mobile/views/seller/sellers_list_view.dart';
 import 'package:sarti_mobile/views/views.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importar la vista de emprendedores
 
 class HomeScreen extends StatelessWidget {
-
   static const name = 'home';
 
   const HomeScreen({super.key});
@@ -23,7 +22,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final AuthService _authService = AuthService();
-
 
     return FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),
@@ -40,7 +38,8 @@ class HomeScreen extends StatelessWidget {
                 actions: [
                   if (prefs?.getString('token') != null && prefs?.getString('role') == 'COMPRADOR')
                     IconButton(
-                      icon: const Icon(Icons.shopping_cart, color: Colors.white),
+                      icon:
+                          const Icon(Icons.shopping_cart, color: Colors.white),
                       onPressed: () {
                         context.pushNamed(ShoppingCartScreen.name);
                       },
@@ -153,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: viewModel.products.length,
                           gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.7,
                           ),
@@ -192,14 +191,19 @@ class HomeScreen extends StatelessWidget {
                                         height: 120,
                                         width: double.infinity,
                                         fit: BoxFit.cover,
-                                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             product.name,
@@ -223,12 +227,13 @@ class HomeScreen extends StatelessWidget {
                                           Row(
                                             children: [
                                               const Icon(Icons.star,
-                                                  size: 14, color: Colors.orange),
+                                                  size: 14,
+                                                  color: Colors.orange),
                                               const SizedBox(width: 4),
                                               Text(
                                                 product.rating > 0
                                                     ? product.rating
-                                                    .toStringAsFixed(1)
+                                                        .toStringAsFixed(1)
                                                     : '0.0',
                                                 style: const TextStyle(
                                                   fontSize: 14,
@@ -307,6 +312,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

@@ -77,7 +77,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/rate',
-      builder: (BuildContext context, GoRouterState state) => 
+      builder: (BuildContext context, GoRouterState state) =>
           TopRatedScreen(),
     ),
     GoRoute(
@@ -105,11 +105,11 @@ final appRouter = GoRouter(
           const HomeScreen(),
     ),
 
-    GoRoute(path: '/home-delivery',
+    GoRoute(
+        path: '/home-delivery',
         name: DeliveryOrdersList.name,
         builder: (BuildContext context, GoRouterState state) =>
-            DeliveryOrdersList()
-    ),
+            DeliveryOrdersList()),
 
     GoRoute(
       path: '/shopping-cart',

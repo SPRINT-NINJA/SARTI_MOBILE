@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sarti_mobile/viewmodels/sellers/seller_viewmodel.dart';
 import 'package:sarti_mobile/config/theme/colors.dart';
+import 'package:sarti_mobile/views/auth/product_list_screen.dart';
+import 'package:sarti_mobile/views/auth/home_screen.dart';
+import 'package:sarti_mobile/views/seller/sellers_products_list_view.dart'; // Importa la HomeScreen
 
 class SellersListView extends StatelessWidget {
   @override
@@ -10,9 +13,22 @@ class SellersListView extends StatelessWidget {
       create: (_) => SellersViewModel()..loadSellers(),
       child: Scaffold(
         appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('assets/logo/ICON-SARTI.png', width: 24, height: 24),
+          leading: GestureDetector(
+            onTap: () {
+              // Navega a HomeScreen al presionar el ícono de SARTI
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                'assets/logo/ICON-SARTI.png',
+                width: 24,
+                height: 24,
+              ),
+            ),
           ),
           backgroundColor: AppColors.primaryColor,
         ),
@@ -23,33 +39,39 @@ class SellersListView extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 "Emprendedores",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
             Expanded(
               child: Consumer<SellersViewModel>(
                 builder: (context, viewModel, child) {
                   if (viewModel.isLoading && viewModel.sellers.isEmpty) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   return ListView.builder(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     itemCount: viewModel.sellers.length + 1,
                     itemBuilder: (context, index) {
                       if (index == viewModel.sellers.length) {
                         return viewModel.isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : SizedBox.shrink();
+                            ? const Center(child: CircularProgressIndicator())
+                            : const SizedBox.shrink();
                       }
 
                       final seller = viewModel.sellers[index];
                       return Card(
                         elevation: 5,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -58,30 +80,47 @@ class SellersListView extends StatelessWidget {
                                 height: 100,
                                 alignment: Alignment.center,
                               ),
-                              SizedBox(width: 16),
+                              const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       seller.name,
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text(
                                       seller.description,
-                                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     ElevatedButton(
                                       onPressed: () {
-                                        // Acción al presionar el botón
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SellersProductsListView(
+                                                    sellerId: seller.id),
+                                          ),
+                                        );
                                       },
-                                      child: Text('Ver productos'),
+                                      child: const Text('Ver productos'),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.sencudaryColor,
+                                        backgroundColor:
+                                            AppColors.sencudaryColor,
                                         foregroundColor: Colors.white,
-                                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                        textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ],

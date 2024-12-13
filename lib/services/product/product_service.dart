@@ -1,21 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:sarti_mobile/config/config.dart';
 import 'package:sarti_mobile/models/product/product_model_public.dart';
-
 class ProductService {
   late final Dio dio;
+
   ProductService() : dio = DioConfig.configDio();
 
   Future<List<Product>> fetchProducts({
     int page = 0,
-    int size = 1000,
+    int size = 10,
     String sort = 'name',
     String direction = 'asc',
     String searchValue = '',
+    int? sellerId,
   }) async {
     try {
-      var sellerId = '';
-      var prdName = '';
       final response = await dio.get(
         '/product',
         queryParameters: {
@@ -24,13 +23,14 @@ class ProductService {
           'sort': sort,
           'direction': direction,
           'searchValue': searchValue,
-          'productName': prdName,
-          'sellerId': sellerId,
+          if (sellerId != null) 'sellerId': sellerId,
         },
       );
 
       if (response.statusCode == 200) {
-        final List<Product> products = (response.data['data']['content'] as List).map((product) => Product.fromJson(product)).toList();
+        final List<Product> products = (response.data['data']['content'] as List)
+            .map((product) => Product.fromJson(product))
+            .toList();
         return products;
       } else {
         throw Exception('Error al cargar los productos: ${response.statusCode}');
@@ -62,4 +62,3 @@ class ProductService {
     }
   }
 }
-
